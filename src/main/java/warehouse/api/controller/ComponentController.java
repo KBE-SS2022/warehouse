@@ -15,11 +15,9 @@ import java.util.List;
 @RestController
 public class ComponentController {
 
-
 	public static void main(String[] args) {
 		SpringApplication.run(ComponentController.class, args);
-		System.out.println("hello");
-
+		System.out.println("Greetings");
 	}
 
 	private ComponentDAO componentDAO = new ComponentDAO();
@@ -29,7 +27,6 @@ public class ComponentController {
 			produces = "application/json")
 
 	public List<Component> getComponents() {
-
 		return componentDAO.getComponentsList();
 	}
 
@@ -39,7 +36,6 @@ public class ComponentController {
 			produces = "application/json")
 
 	public List<Component> getEmployeeById(@PathVariable(value = "id") int componentId) {
-
 		return this.componentDAO.getComponent(componentId);
 	}
 }

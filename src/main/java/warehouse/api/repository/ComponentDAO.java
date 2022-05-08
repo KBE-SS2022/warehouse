@@ -1,4 +1,7 @@
 package warehouse.api.repository;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.stereotype.Repository;
 import warehouse.api.entity.*;
 
@@ -9,58 +12,45 @@ import java.util.stream.Collectors;
 import java.io.FileReader;
 
 
-
 @Repository
-
-// Class to create a list
-// of employees
+// Class to create a list of employees
 public class ComponentDAO {
 
-    private static ArrayList<Component> componentsList=new ArrayList<Component>();
-    private static int id=1;
+    private static ArrayList<Component> componentsList = new ArrayList<>();
+    private static int id = 1;
 
-
-
-
+    // Load CSV file before apps starts
     static {
+    try(FileReader fr = new FileReader("src/main/resources/components.csv")){
+       CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).build();
 
-        String file = "/Users/aron/Desktop/KBE/demo/components.csv";
-        List<String[]> content = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                componentsList.add(
-                        new Component(id, line, "bla", "bla")
-                );
-                id++;
-                content.add(line.split(","));
-               System.out.println(line);
-
-            }
-        } catch (IOException e) {
-            System.out.println("error");
-
-        }
-
-
+       String[] line;
+       while ( (line = reader.readNext() ) != null) {
+           componentsList.add( new Component(id, line[0], "b","b") );
+           id++;
+       }
+       reader.close();
+    } catch (FileNotFoundException e) {
+        e.printStackTrace();
+    } catch (IOException e) {
+        e.printStackTrace();
+    } catch (CsvValidationException e) {
+        e.printStackTrace();
     }
-    public   static ArrayList<Component> getComponentsList() {
+}
+
+    public static ArrayList<Component> getComponentsList() {
         return componentsList;
     }
 
-    public  void
-    addComponent(Component component) {
-        componentsList
-                .add(component);
-
+    public void addComponent(Component component) {
+        componentsList.add(component);
     }
 
-    public  List<Component>  getComponent(int id) {
-
-        List<Component> result = componentsList.stream().filter(component-> component.getId().equals(id))
-                .collect(Collectors.toList());
-        return  result;
-    }
+    public List<Component> getComponent(int id) {
+        return componentsList.stream()
+                .filter( component -> component.getId().equals(id) )
+                .collect( Collectors.toList() );    }
 }
 
 
