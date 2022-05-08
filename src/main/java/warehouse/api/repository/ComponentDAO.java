@@ -16,7 +16,7 @@ import java.io.FileReader;
 // Class to create a list of employees
 public class ComponentDAO {
 
-    private static ArrayList<Component> componentsList = new ArrayList<>();
+    private static final ArrayList<Component> componentsList = new ArrayList<>();
     private static int id = 1;
 
     // Load CSV file before apps starts

@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import warehouse.api.entity.Component;
-import warehouse.api.repository.ComponentDAO;
+import warehouse.api.service.ComponentService;
 
 import java.util.List;
 
@@ -20,22 +20,21 @@ public class ComponentController {
 		System.out.println("Greetings");
 	}
 
-	private ComponentDAO componentDAO = new ComponentDAO();
+	private final ComponentService componentService = new ComponentService();
 
 	@GetMapping(
 			path = "/components",
 			produces = "application/json")
 
 	public List<Component> getComponents() {
-		return componentDAO.getComponentsList();
+		return componentService.getComponentsList();
 	}
-
 
 	@GetMapping(
 			path = "/components/{id}",
 			produces = "application/json")
 
 	public List<Component> getEmployeeById(@PathVariable(value = "id") int componentId) {
-		return this.componentDAO.getComponent(componentId);
+		return this.componentService.getComponent(componentId);
 	}
 }
