@@ -4,29 +4,40 @@ public class Component {
 
     private Long id;
     private String name;
-    private String lastName;
+    private String brand;
     private String countryOrigin;
+    private char nutritionscore;
+    private Integer calories;
+    private Integer amount;
+    private Double weight;
 
 
     public Component(){}
 
-    public Component(Long id, String name, String lastName, String countryOrigin) {
-        super();
+    public Component(Long id, String name, String brand, String countryOrigin, char nutritionscore,
+                     Integer calories, Integer amount, Double weight) {
         this.id = id;
         this.name = name;
-        this.lastName = lastName;
+        this.brand = brand;
         this.countryOrigin = countryOrigin;
+        this.nutritionscore = nutritionscore;
+        this.calories = calories;
+        this.amount = amount;
+        this.weight = weight;
     }
 
-
-    // Overriding the toString method to find all the values
     @Override
     public String toString() {
-        return "Component [id="
-                + id + ", name="
-                + name + ", lastName="
-                + lastName + ", email="
-                + countryOrigin + "]";
+        return "Component{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", brand='" + brand + '\'' +
+                ", countryOrigin='" + countryOrigin + '\'' +
+                ", nutritionscore=" + nutritionscore +
+                ", calories=" + calories +
+                ", amount=" + amount +
+                ", weight=" + weight +
+                '}';
     }
 
     public Long getId() {
@@ -45,12 +56,12 @@ public class Component {
         this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getCountryOrigin() {
@@ -58,8 +69,40 @@ public class Component {
     }
 
     public void setCountryOrigin(String countryOrigin) {
-            this.countryOrigin = countryOrigin;
-        }
+        this.countryOrigin = countryOrigin;
+    }
+
+    public char getNutritionscore() {
+        return nutritionscore;
+    }
+
+    public void setNutritionscore(char nutritionscore) {
+        this.nutritionscore = nutritionscore;
+    }
+
+    public Integer getCalories() {
+        return calories;
+    }
+
+    public void setCalories(Integer calories) {
+        this.calories = calories;
+    }
+
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
 }
 
 

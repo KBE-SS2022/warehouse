@@ -26,7 +26,7 @@ public class ComponentDAO {
 
            String[] line;
            while ( (line = reader.readNext() ) != null) {
-               componentsList.add( new Component(id, line[0], "b","b") );
+               componentsList.add( new Component(id, line[0], "b", "b", 'A', 1, 2, 3.0) );
                id++;
            }
            reader.close();
