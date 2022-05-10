@@ -2,9 +2,15 @@ package warehouse.api.entity;
 
 public class Component {
 
+    private Long id;
+    private String name;
+    private String lastName;
+    private String countryOrigin;
+
+
     public Component(){}
 
-    public Component(Integer id, String name, String lastName, String countryOrigin) {
+    public Component(Long id, String name, String lastName, String countryOrigin) {
         super();
         this.id = id;
         this.name = name;
@@ -12,16 +18,8 @@ public class Component {
         this.countryOrigin = countryOrigin;
     }
 
-    private Integer id;
 
-    private String name;
-
-    private String lastName;
-
-    private String countryOrigin;
-
-    // Overriding the toString method
-    // to find all the values
+    // Overriding the toString method to find all the values
     @Override
     public String toString() {
         return "Component [id="
@@ -31,11 +29,11 @@ public class Component {
                 + countryOrigin + "]";
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

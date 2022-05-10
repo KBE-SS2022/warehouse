@@ -17,7 +17,7 @@ import java.io.FileReader;
 public class ComponentDAO {
 
     private static final ArrayList<Component> componentsList = new ArrayList<>();
-    private static int id = 1;
+    private static Long id = 1L;
 
     // Load CSV file before apps starts
     static {
@@ -47,7 +47,7 @@ public class ComponentDAO {
         componentsList.add(component);
     }
 
-    public List<Component> getComponent(int id) {
+    public List<Component> getComponent(Long id) {
         return componentsList.stream()
                 .filter( component -> component.getId().equals(id) )
                 .collect( Collectors.toList() );    }

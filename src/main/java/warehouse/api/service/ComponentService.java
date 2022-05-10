@@ -15,7 +15,7 @@ public class ComponentService {
         return ComponentDAO.getComponentsList();
     }
 
-    public List<Component> getComponent(int id){
+    public List<Component> getComponent(Long id){
         return componentDAO.getComponent(id);
     }
 }
