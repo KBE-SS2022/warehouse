@@ -21,23 +21,23 @@ public class ComponentDAO {
 
     // Load CSV file before apps starts
     static {
-    try(FileReader fr = new FileReader("src/main/resources/components.csv")){
-       CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).build();
+        try(FileReader fr = new FileReader("src/main/resources/components.csv")){
+           CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).build();
 
-       String[] line;
-       while ( (line = reader.readNext() ) != null) {
-           componentsList.add( new Component(id, line[0], "b","b") );
-           id++;
-       }
-       reader.close();
-    } catch (FileNotFoundException e) {
-        e.printStackTrace();
-    } catch (IOException e) {
-        e.printStackTrace();
-    } catch (CsvValidationException e) {
-        e.printStackTrace();
+           String[] line;
+           while ( (line = reader.readNext() ) != null) {
+               componentsList.add( new Component(id, line[0], "b","b") );
+               id++;
+           }
+           reader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (CsvValidationException e) {
+            e.printStackTrace();
+        }
     }
-}
 
     public static ArrayList<Component> getComponentsList() {
         return componentsList;
