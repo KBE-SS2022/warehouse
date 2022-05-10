@@ -50,7 +50,8 @@ public class ComponentDAO {
     public List<Component> getComponent(Long id) {
         return componentsList.stream()
                 .filter( component -> component.getId().equals(id) )
-                .collect( Collectors.toList() );    }
+                .collect( Collectors.toList() );
+    }
 }
 
 
