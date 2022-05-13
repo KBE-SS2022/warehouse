@@ -14,12 +14,8 @@ import java.util.List;
 @RequestMapping
 public class IngredientController {
 
-	private final IngredientService ingredientService;
-
 	@Autowired
-	public IngredientController(IngredientService ingredientService){
-		this.ingredientService = ingredientService;
-	}
+	private IngredientService ingredientService;
 
 	@GetMapping(path = "/ingredients", produces = "application/json")
 	public List<Ingredient> getIngredients() {

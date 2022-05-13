@@ -12,7 +12,7 @@ public class Ingredient {
     private Double weight;
 
 
-    public Ingredient(){}
+    public Ingredient() {}
 
     public Ingredient(Long id, String name, String brand, String countryOrigin, char nutritionScore,
                       Integer calories, Integer amount, Double weight) {

@@ -15,12 +15,8 @@ import java.util.List;
 @RequestMapping
 public class PizzaController {
 
-    private final PizzaService pizzaService;
-
     @Autowired
-    public PizzaController(PizzaService pizzaService){
-        this.pizzaService = pizzaService;
-    }
+    private PizzaService pizzaService;
 
     @GetMapping(path = "/pizzas", produces = "application/json")
     public List<Pizza> getPizzas() {

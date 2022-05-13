@@ -6,6 +6,7 @@ public class Pizza {
 
     private Long id;
     private String name;
+
     // Requirements: Ingredient "Brot" is mandatory,
     // each ingredient may only occure once
     private List<Ingredient> ingredients;
