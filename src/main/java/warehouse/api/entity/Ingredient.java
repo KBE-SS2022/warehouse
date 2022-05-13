@@ -14,13 +14,13 @@ public class Ingredient {
 
     public Ingredient(){}
 
-    public Ingredient(Long id, String name, String brand, String countryOrigin, char nutritionscore,
+    public Ingredient(Long id, String name, String brand, String countryOrigin, char nutritionScore,
                       Integer calories, Integer amount, Double weight) {
         this.id = id;
         this.name = name;
         this.brand = brand;
         this.countryOrigin = countryOrigin;
-        this.nutritionScore = nutritionscore;
+        this.nutritionScore = nutritionScore;
         this.calories = calories;
         this.amount = amount;
         this.weight = weight;
@@ -33,7 +33,7 @@ public class Ingredient {
                 ", name='" + name + '\'' +
                 ", brand='" + brand + '\'' +
                 ", countryOrigin='" + countryOrigin + '\'' +
-                ", nutritionscore=" + nutritionScore +
+                ", nutritionScore=" + nutritionScore +
                 ", calories=" + calories +
                 ", amount=" + amount +
                 ", weight=" + weight +
@@ -76,7 +76,7 @@ public class Ingredient {
         return nutritionScore;
     }
 
-    public void setNutritionscore(char nutritionScore) {
+    public void setNutritionScore(char nutritionScore) {
         this.nutritionScore = nutritionScore;
     }
 

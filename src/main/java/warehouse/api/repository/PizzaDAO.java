@@ -15,26 +15,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.io.FileReader;
 
-
 @Repository
-public class IngredientDAO {
+public class PizzaDAO {
 
-    private static final List<Ingredient> INGREDIENTS = new ArrayList<>();
+    private static final List<Pizza> PIZZAS = new ArrayList<>();
 
     // Load CSV file before apps starts
     static {
-        try(FileReader fr = new FileReader("src/main/resources/ingredients.csv")){
+        try(FileReader fr = new FileReader("src/main/resources/pizzas.csv")){
             CSVParser parser = new CSVParserBuilder().withSeparator(';')
                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
             CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
-           String[] line;
-           while ( (line = reader.readNext() ) != null) {
-               INGREDIENTS.add( new Ingredient(Long.parseLong(line[0]), line[1],
-                       line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
-                       Double.parseDouble(line[7])) );
-           }
-           reader.close();
+            String[] line;
+            while ( (line = reader.readNext() ) != null) {
+                PIZZAS.add( new Pizza(Long.parseLong(line[0]), line[1],
+                        new ArrayList<>()) );
+            }
+            reader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -44,20 +42,17 @@ public class IngredientDAO {
         }
     }
 
-    public static List<Ingredient> getIngredients() {
-        return INGREDIENTS;
+    public static List<Pizza> getPizzas() {
+        return PIZZAS;
     }
 
-    public void addZutat(Ingredient ingredient) {
-        INGREDIENTS.add(ingredient);
+    public void addPizza(Pizza pizza) {
+        PIZZAS.add(pizza);
     }
 
-    public Ingredient getIngredient(Long id) {
-        return INGREDIENTS.stream()
-                .filter( ingredient -> ingredient.getId().equals(id) )
+    public Pizza getPizza(Long id) {
+        return PIZZAS.stream()
+                .filter( pizza -> pizza.getId().equals(id) )
                 .collect(Collectors.toList()).get(0);
     }
 }
-
-
-
