@@ -13,10 +13,9 @@ import java.io.FileReader;
 
 
 @Repository
-// Class to create a list of employees
-public class ComponentDAO {
+public class IngredientDAO {
 
-    private static final ArrayList<Component> componentsList = new ArrayList<>();
+    private static final ArrayList<Ingredient> INGREDIENTS = new ArrayList<>();
     private static Long id = 1L;
 
     // Load CSV file before apps starts
@@ -26,7 +25,7 @@ public class ComponentDAO {
 
            String[] line;
            while ( (line = reader.readNext() ) != null) {
-               componentsList.add( new Component(id, line[0], "b", "b", 'A', 1, 2, 3.0) );
+               INGREDIENTS.add( new Ingredient(id, line[0], "b", "b", 'A', 1, 2, 3.0) );
                id++;
            }
            reader.close();
@@ -39,18 +38,18 @@ public class ComponentDAO {
         }
     }
 
-    public static ArrayList<Component> getComponentsList() {
-        return componentsList;
+    public static List<Ingredient> getIngredients() {
+        return INGREDIENTS;
     }
 
-    public void addComponent(Component component) {
-        componentsList.add(component);
+    public void addZutat(Ingredient ingredient) {
+        INGREDIENTS.add(ingredient);
     }
 
-    public List<Component> getComponent(Long id) {
-        return componentsList.stream()
-                .filter( component -> component.getId().equals(id) )
-                .collect( Collectors.toList() );
+    public Ingredient getIngredient(Long id) {
+        return INGREDIENTS.stream()
+                .filter( ingredient -> ingredient.getId().equals(id) )
+                .collect(Collectors.toList()).get(0);
     }
 }
 

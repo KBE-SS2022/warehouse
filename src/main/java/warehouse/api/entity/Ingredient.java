@@ -1,26 +1,26 @@
 package warehouse.api.entity;
 
-public class Component {
+public class Ingredient {
 
     private Long id;
     private String name;
     private String brand;
     private String countryOrigin;
-    private char nutritionscore;
+    private char nutritionScore;
     private Integer calories;
     private Integer amount;
     private Double weight;
 
 
-    public Component(){}
+    public Ingredient(){}
 
-    public Component(Long id, String name, String brand, String countryOrigin, char nutritionscore,
-                     Integer calories, Integer amount, Double weight) {
+    public Ingredient(Long id, String name, String brand, String countryOrigin, char nutritionscore,
+                      Integer calories, Integer amount, Double weight) {
         this.id = id;
         this.name = name;
         this.brand = brand;
         this.countryOrigin = countryOrigin;
-        this.nutritionscore = nutritionscore;
+        this.nutritionScore = nutritionscore;
         this.calories = calories;
         this.amount = amount;
         this.weight = weight;
@@ -28,12 +28,12 @@ public class Component {
 
     @Override
     public String toString() {
-        return "Component{" +
+        return "Ingredient {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", brand='" + brand + '\'' +
                 ", countryOrigin='" + countryOrigin + '\'' +
-                ", nutritionscore=" + nutritionscore +
+                ", nutritionscore=" + nutritionScore +
                 ", calories=" + calories +
                 ", amount=" + amount +
                 ", weight=" + weight +
@@ -72,12 +72,12 @@ public class Component {
         this.countryOrigin = countryOrigin;
     }
 
-    public char getNutritionscore() {
-        return nutritionscore;
+    public char getNutritionScore() {
+        return nutritionScore;
     }
 
-    public void setNutritionscore(char nutritionscore) {
-        this.nutritionscore = nutritionscore;
+    public void setNutritionscore(char nutritionScore) {
+        this.nutritionScore = nutritionScore;
     }
 
     public Integer getCalories() {
