@@ -23,13 +23,13 @@ public class ComponentController {
 	}
 
 	@GetMapping(path = "/components", produces = "application/json")
-	public List<Component> getComponents() {
-		return componentService.getComponentsList();
+	public ResponseEntity<List<Component>> getComponents() {
+		List<Component> listAllComponents= componentService.getComponentsList();
+		return new ResponseEntity<List<Component>>(listAllComponents, HttpStatus.OK);
 	}
-
-
 	@GetMapping(path = "/components/{id}", produces = "application/json")
-	public List<Component> getEmployeeById(@PathVariable(value = "id") Long componentId) {
-		return this.componentService.getComponent(componentId);
+	public ResponseEntity<List<Component>> getEmployeeById(@PathVariable(value = "id") int componentId) {
+		List<Component> getEmployeeById=componentService.getComponentsList();
+		return new ResponseEntity<List<Component>>(getEmployeeById, HttpStatus.OK);
 	}
 }
