@@ -29,10 +29,11 @@ public class IngredientDAO {
             CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
            String[] line;
+           //possible FormatExceptions
            while ( (line = reader.readNext() ) != null) {
                INGREDIENTS.add( new Ingredient(Long.parseLong(line[0]), line[1],
                        line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
-                       Double.parseDouble(line[7])) );
+                       Double.parseDouble(line[7]), Double.parseDouble(line[8])) );
            }
            reader.close();
         } catch (FileNotFoundException e) {

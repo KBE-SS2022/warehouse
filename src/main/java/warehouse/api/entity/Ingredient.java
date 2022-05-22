@@ -10,12 +10,13 @@ public class Ingredient {
     private Integer calories;
     private Integer amount;
     private Double weight;
+    private Double price;
 
 
     public Ingredient() {}
 
     public Ingredient(Long id, String name, String brand, String countryOrigin, char nutritionScore,
-                      Integer calories, Integer amount, Double weight) {
+                      Integer calories, Integer amount, Double weight, Double price) {
         this.id = id;
         this.name = name;
         this.brand = brand;
@@ -24,6 +25,7 @@ public class Ingredient {
         this.calories = calories;
         this.amount = amount;
         this.weight = weight;
+        this.price = price;
     }
 
     @Override
@@ -37,6 +39,7 @@ public class Ingredient {
                 ", calories=" + calories +
                 ", amount=" + amount +
                 ", weight=" + weight +
+                ", price=" + price +
                 '}';
     }
 
@@ -103,6 +106,10 @@ public class Ingredient {
     public void setWeight(Double weight) {
         this.weight = weight;
     }
+
+    public Double getPrice() { return price; }
+
+    public void setPrice(Double price) { this.price = price; }
 }
 
 
