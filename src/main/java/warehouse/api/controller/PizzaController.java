@@ -1,6 +1,8 @@
 package warehouse.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,13 +21,15 @@ public class PizzaController {
     private PizzaService pizzaService;
 
     @GetMapping(path = "/pizzas", produces = "application/json")
-    public List<Pizza> getPizzas() {
-        return pizzaService.getPizzas();
+    public ResponseEntity<List<Pizza>> getPizzas() {
+        List<Pizza> allPizzas = pizzaService.getPizzas();
+        return new ResponseEntity<>(allPizzas,HttpStatus.OK);
     }
 
 
     @GetMapping(path = "/pizza/{id}", produces = "application/json")
-    public Pizza getPizzaById(@PathVariable(value = "id") Long pizzaId) {
-        return this.pizzaService.getPizza(pizzaId);
+    public ResponseEntity<Pizza> getPizzaById(@PathVariable(value = "id") Long pizzaId) {
+        Pizza pizzaById = this.pizzaService.getPizza(pizzaId);
+        return new ResponseEntity<>(pizzaById, HttpStatus.OK);
     }
 }

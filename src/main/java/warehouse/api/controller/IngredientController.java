@@ -1,6 +1,8 @@
 package warehouse.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,13 +20,14 @@ public class IngredientController {
 	private IngredientService ingredientService;
 
 	@GetMapping(path = "/ingredients", produces = "application/json")
-	public List<Ingredient> getIngredients() {
-		return ingredientService.getIngredients();
+	public ResponseEntity<List<Ingredient>> getIngredients() {
+		List<Ingredient> allIngredients = ingredientService.getIngredients();
+		return new ResponseEntity<>(allIngredients, HttpStatus.OK);
 	}
 
-
 	@GetMapping(path = "/ingredient/{id}", produces = "application/json")
-	public Ingredient getIngredientById(@PathVariable(value = "id") Long ingredientId) {
-		return this.ingredientService.getIngredient(ingredientId);
+	public ResponseEntity<Ingredient> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
+		Ingredient ingredientById = this.ingredientService.getIngredient(ingredientId);
+		return new ResponseEntity<>(ingredientById, HttpStatus.OK);
 	}
 }
