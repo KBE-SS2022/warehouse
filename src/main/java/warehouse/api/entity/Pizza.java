@@ -13,7 +13,7 @@ public class Pizza {
     // Requirements: Ingredient "Brot" is mandatory,
     // each ingredient may only occure once
     @Column
-    @OneToMany
+    @ManyToMany
     private List<Ingredient> ingredients;
 
 
