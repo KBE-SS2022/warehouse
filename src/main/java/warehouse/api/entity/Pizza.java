@@ -1,14 +1,19 @@
 package warehouse.api.entity;
 
+import javax.persistence.*;
 import java.util.List;
-
+@Entity
+@Table(name = "Pizza")
 public class Pizza {
-
+    @Id
     private Long id;
+    @Column(name="name")
     private String name;
 
     // Requirements: Ingredient "Brot" is mandatory,
     // each ingredient may only occure once
+    @Column
+    @OneToMany
     private List<Ingredient> ingredients;
 
 

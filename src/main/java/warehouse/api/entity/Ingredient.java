@@ -1,15 +1,30 @@
 package warehouse.api.entity;
 
-public class Ingredient {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name= "ingredient")
+public class Ingredient {
+    @Id
     private Long id;
+    @Column(name="name")
     private String name;
+    @Column(name="brand")
     private String brand;
+    @Column(name="countryOrigin")
     private String countryOrigin;
+    @Column(name="nutritionScore")
     private char nutritionScore;
+    @Column(name="calories")
     private Integer calories;
+    @Column(name="amount")
     private Integer amount;
+    @Column(name="weight")
     private Double weight;
+    @Column(name="price")
     private Double price;
 
 
