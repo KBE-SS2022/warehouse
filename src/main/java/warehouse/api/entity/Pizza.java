@@ -10,12 +10,10 @@ public class Pizza {
     @Column(name="name")
     private String name;
 
-    // Requirements: Ingredient "Brot" is mandatory,
-    // each ingredient may only occure once
+    // Requirements: Validate, if ID=010101 exists
     @Column
-    @OneToMany
+    @ManyToMany
     private List<Ingredient> ingredients;
-
 
     public Pizza() {}
 
