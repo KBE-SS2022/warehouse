@@ -8,6 +8,7 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
+import warehouse.api.exception.CSVImportFailedException;
 import warehouse.api.repository.IngredientRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -31,8 +32,10 @@ public class CSVImporter {
         try {
             ingredients = this.importIngredients();
             pizzas = this.importPizzas();
-        } catch (IOException | CsvValidationException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new CSVImportFailedException("Failed to read CSV file");
+        } catch (CsvValidationException e){
+            throw new CSVImportFailedException("CSV file not valid");
         }
         //ingredients.stream().forEach(ir::save);
     }
