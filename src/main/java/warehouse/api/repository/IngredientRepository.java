@@ -8,9 +8,11 @@ import java.util.Optional;
 
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
+    List< Ingredient>saveAll(List<Ingredient> ingredients);
     Ingredient save(Ingredient ingredient);
     Optional<Ingredient> findById(Long id);
     List<Ingredient> findAll();
+    void delete(Ingredient ingredient);
 
 
 
