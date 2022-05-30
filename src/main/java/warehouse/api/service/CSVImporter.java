@@ -6,29 +6,33 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
 import warehouse.api.exception.CSVImportFailedException;
 import warehouse.api.repository.IngredientRepository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CSVImporter {
+@Component
+public class CSVImporter implements InitializingBean {
 
     private final static String PATH_INGREDIENTS = "src/main/resources/ingredients.csv";
     private final static String PATH_PIZZAS = "src/main/resources/pizzas.csv";
 
+    @Autowired
+    private IngredientRepository ingredientrepository;
 
-    public void saveRecordsToDB() {
+    @Override
+    public void afterPropertiesSet() throws CSVImportFailedException {
         List<Ingredient> ingredients = new LinkedList<>();
         List<Pizza> pizzas = new LinkedList<>();
-        //IngredientRepository ir = new IngredientRepository();
         try {
             ingredients = this.importIngredients();
             pizzas = this.importPizzas();
@@ -37,7 +41,8 @@ public class CSVImporter {
         } catch (CsvValidationException e){
             throw new CSVImportFailedException("CSV file not valid");
         }
-        //ingredients.stream().forEach(ir::save);
+        ingredients.forEach(ingredientrepository::save);
+        //PizzaRepository
     }
 
     private List<Ingredient> importIngredients() throws IOException, CsvValidationException{
@@ -49,7 +54,6 @@ public class CSVImporter {
         CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
         String[] line;
-        //possible FormatExceptions
         while ( (line = reader.readNext() ) != null) {
             importedIngredients.add( new Ingredient(Long.parseLong(line[0]), line[1],
                     line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
@@ -68,7 +72,6 @@ public class CSVImporter {
         CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
         String[] line;
-        //possible FormatExceptions
         while ( (line = reader.readNext() ) != null) {
             importedPizzas.add( new Pizza(Long.parseLong(line[0]), line[1],
                     new ArrayList<>()) );
