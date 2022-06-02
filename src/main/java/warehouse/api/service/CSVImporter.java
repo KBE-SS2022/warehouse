@@ -13,12 +13,15 @@ import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
 import warehouse.api.exception.CSVImportFailedException;
 import warehouse.api.repository.IngredientRepository;
+import warehouse.api.repository.PizzaRepository;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class CSVImporter implements InitializingBean {
@@ -27,7 +30,10 @@ public class CSVImporter implements InitializingBean {
     private final static String PATH_PIZZAS = "src/main/resources/pizzas.csv";
 
     @Autowired
-    private IngredientRepository ingredientrepository;
+    private IngredientRepository ingredientRepository;
+
+    @Autowired
+    private PizzaRepository pizzaRepository;
 
     @Override
     public void afterPropertiesSet() throws CSVImportFailedException {
@@ -41,8 +47,8 @@ public class CSVImporter implements InitializingBean {
         } catch (CsvValidationException e){
             throw new CSVImportFailedException("CSV file not valid");
         }
-        ingredients.forEach(ingredientrepository::save);
-        //PizzaRepository
+        ingredients.forEach(ingredientRepository::save);
+        pizzas.forEach(pizzaRepository::save);
     }
 
     private List<Ingredient> importIngredients() throws IOException, CsvValidationException{
@@ -73,8 +79,17 @@ public class CSVImporter implements InitializingBean {
 
         String[] line;
         while ( (line = reader.readNext() ) != null) {
-            importedPizzas.add( new Pizza(Long.parseLong(line[0]), line[1],
-                    new ArrayList<>()) );
+            System.out.println("Line --- " + List.of( line[2].split(",") ).get(0));
+            List<Long> idList = List.of( line[2].split(",") )
+                    .stream()
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            List<Ingredient> ing = idList.stream()
+                    .map(ingredientRepository::findById)
+                    .map(Optional::get)
+                    .collect(Collectors.toList());
+
+            importedPizzas.add( new Pizza(Long.parseLong(line[0]), line[1], ing) );
         }
         reader.close();
         return importedPizzas;

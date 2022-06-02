@@ -6,12 +6,14 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import warehouse.api.entity.*;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.io.FileReader;
 
@@ -19,6 +21,9 @@ import java.io.FileReader;
 public class PizzaDAO {
 
     private static final List<Pizza> PIZZAS = new ArrayList<>();
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     // Load CSV file before apps starts
     static {
@@ -29,8 +34,15 @@ public class PizzaDAO {
 
             String[] line;
             while ( (line = reader.readNext() ) != null) {
+              /*  System.out.println("Line --- " + List.of( line[2].split(",") ).get(0));
+                List<Long> idList = List.of( line[2].split(",") ).stream().map(Long::parseLong).collect(Collectors.toList());
+                List<Ingredient> ing = idList.stream()
+                        .map(ingredientRepository::findById)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());*/
+
                 PIZZAS.add( new Pizza(Long.parseLong(line[0]), line[1],
-                        new ArrayList<>()) );
+                        null) );
             }
             reader.close();
         } catch (FileNotFoundException e) {

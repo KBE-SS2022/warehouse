@@ -2,17 +2,23 @@ package warehouse.api.entity;
 
 import javax.persistence.*;
 import java.util.List;
+
 @Entity
 @Table(name = "Pizza")
 public class Pizza {
+
     @Id
+    //@Column(name = "pizza_id")
     private Long id;
     @Column(name="name")
     private String name;
 
-    // Requirements: Validate, if ID=010101 exists
+    //TODO Requirements: Validate, if ID=010101 exists
     @Column
-    @ManyToMany
+    @ManyToMany()
+    /*@JoinTable(name = "pizza_ingredients",
+    joinColumns = { @JoinColumn(name = "id") },
+    inverseJoinColumns = { @JoinColumn(name="id") })*/
     private List<Ingredient> ingredients;
 
     public Pizza() {}

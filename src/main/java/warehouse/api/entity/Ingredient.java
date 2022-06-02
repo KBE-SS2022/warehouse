@@ -1,14 +1,14 @@
 package warehouse.api.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name= "ingredient")
 public class Ingredient {
+
     @Id
+    //@Column(name = "ingredient_id")
     private Long id;
     @Column(name="name")
     private String name;
@@ -26,6 +26,9 @@ public class Ingredient {
     private Double weight;
     @Column(name="price")
     private Double price;
+
+    /*@ManyToMany(mappedBy = "ingredients")
+    private List<Pizza> pizzas;*/
 
 
     public Ingredient() {}

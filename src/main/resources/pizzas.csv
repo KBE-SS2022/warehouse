@@ -1,6 +1,6 @@
-ID;Name;Ingredients
-010201;Margherita;x
-010202;Salami;x
-010203;Fungi;x
-010204;Turca;x
-010205;Quattro Stagioni;x
+ID;Name;Ingredients;;;
+10201;Margherita;10101,10111,10108;;;
+10202;Salami;10102;;10102;10101,10102
+10203;Fungi;10103;;10103;10101,10103
+10204;Turca;10104;;10104;10101,10104
+10205;Quattro Stagioni;10105;;10105;10101,10105
