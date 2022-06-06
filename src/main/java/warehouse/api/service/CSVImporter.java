@@ -6,6 +6,8 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,8 +39,14 @@ public class CSVImporter implements InitializingBean {
     @Autowired
     private PizzaRepository pizzaRepository;
 
+    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private Session session;
+
     @Override
     public void afterPropertiesSet() throws CSVImportFailedException {
+        session = sessionFactory.openSession();
+        session.beginTransaction();
+
         List<Ingredient> ingredients = new LinkedList<>();
         List<Pizza> pizzas = new LinkedList<>();
         try {
@@ -51,11 +59,12 @@ public class CSVImporter implements InitializingBean {
         }
         ingredients = addPizzasToIngredients(ingredients, pizzas);
 
-        ingredients.forEach(System.out::println);
-        pizzas.forEach(System.out::println);
-
-        ingredients.forEach(ingredientRepository::save);
-        pizzas.forEach(pizzaRepository::save);
+        ingredients.forEach(session::save);
+        pizzas.forEach(session::save);
+        //ingredients.forEach(ingredientRepository::save);
+        //pizzas.forEach(pizzaRepository::save);
+        session.flush();
+        session.close();
     }
 
     private List<Ingredient> importIngredients() throws IOException, CsvValidationException {
@@ -68,9 +77,12 @@ public class CSVImporter implements InitializingBean {
 
         String[] line;
         while ( (line = reader.readNext() ) != null) {
-            importedIngredients.add( new Ingredient(Long.parseLong(line[0]), line[1],
+            Ingredient newIngredient = new Ingredient(Long.parseLong(line[0]), line[1],
                     line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
-                    Double.parseDouble(line[7]), Double.parseDouble(line[8])) );
+                    Double.parseDouble(line[7]), Double.parseDouble(line[8]));
+            importedIngredients.add(newIngredient);
+
+            session.persist(newIngredient);
         }
         reader.close();
         return importedIngredients;
@@ -97,7 +109,10 @@ public class CSVImporter implements InitializingBean {
                     })
                     .collect(Collectors.toList());
 
-            importedPizzas.add( new Pizza(Long.parseLong(line[0]), line[1], ingredientsOfPizza));
+            Pizza newPizza = new Pizza(Long.parseLong(line[0]), line[1], ingredientsOfPizza);
+            importedPizzas.add(newPizza);
+
+            session.persist(newPizza);
         }
         reader.close();
         return importedPizzas;

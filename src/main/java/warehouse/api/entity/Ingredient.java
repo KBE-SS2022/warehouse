@@ -1,7 +1,5 @@
 package warehouse.api.entity;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +30,6 @@ public class Ingredient {
     private Double price;
 
     @ManyToMany(mappedBy = "ingredients")
-    @Autowired
     private List<Pizza> pizzas = new LinkedList<>();
 
 
