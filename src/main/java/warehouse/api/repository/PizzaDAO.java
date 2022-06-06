@@ -26,7 +26,7 @@ public class PizzaDAO {
     private IngredientRepository ingredientRepository;
 
     // Load CSV file before apps starts
-    static {
+    /*static {
         try(FileReader fr = new FileReader("src/main/resources/pizzas.csv")){
             CSVParser parser = new CSVParserBuilder().withSeparator(';')
                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
@@ -34,12 +34,12 @@ public class PizzaDAO {
 
             String[] line;
             while ( (line = reader.readNext() ) != null) {
-              /*  System.out.println("Line --- " + List.of( line[2].split(",") ).get(0));
+                System.out.println("Line --- " + List.of( line[2].split(",") ).get(0));
                 List<Long> idList = List.of( line[2].split(",") ).stream().map(Long::parseLong).collect(Collectors.toList());
                 List<Ingredient> ing = idList.stream()
                         .map(ingredientRepository::findById)
                         .map(Optional::get)
-                        .collect(Collectors.toList());*/
+                        .collect(Collectors.toList());
 
                 PIZZAS.add( new Pizza(Long.parseLong(line[0]), line[1],
                         null) );
@@ -52,7 +52,7 @@ public class PizzaDAO {
         } catch (CsvValidationException e) {
             e.printStackTrace();
         }
-    }
+    } */
 
     public static List<Pizza> getPizzas() {
         return PIZZAS;

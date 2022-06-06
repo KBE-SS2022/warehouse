@@ -15,6 +15,8 @@ import warehouse.api.exception.CSVImportFailedException;
 import warehouse.api.repository.IngredientRepository;
 import warehouse.api.repository.PizzaRepository;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.awt.desktop.ScreenSleepEvent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,17 +43,22 @@ public class CSVImporter implements InitializingBean {
         List<Pizza> pizzas = new LinkedList<>();
         try {
             ingredients = this.importIngredients();
-            pizzas = this.importPizzas();
+            pizzas = this.importPizzas(ingredients);
         } catch (IOException e) {
             throw new CSVImportFailedException("Failed to read CSV file");
         } catch (CsvValidationException e){
             throw new CSVImportFailedException("CSV file not valid");
         }
+        ingredients = addPizzasToIngredients(ingredients, pizzas);
+
+        ingredients.forEach(System.out::println);
+        pizzas.forEach(System.out::println);
+
         ingredients.forEach(ingredientRepository::save);
         pizzas.forEach(pizzaRepository::save);
     }
 
-    private List<Ingredient> importIngredients() throws IOException, CsvValidationException{
+    private List<Ingredient> importIngredients() throws IOException, CsvValidationException {
         List<Ingredient> importedIngredients = new LinkedList<>();
 
         FileReader fr = new FileReader(PATH_INGREDIENTS);
@@ -69,7 +76,7 @@ public class CSVImporter implements InitializingBean {
         return importedIngredients;
     }
 
-    private List<Pizza> importPizzas() throws IOException, CsvValidationException{
+    private List<Pizza> importPizzas(List<Ingredient> ingredients) throws IOException, CsvValidationException {
         List<Pizza> importedPizzas = new LinkedList<>();
 
         FileReader fr = new FileReader(PATH_PIZZAS);
@@ -79,20 +86,33 @@ public class CSVImporter implements InitializingBean {
 
         String[] line;
         while ( (line = reader.readNext() ) != null) {
-            System.out.println("Line --- " + List.of( line[2].split(",") ).get(0));
-            List<Long> idList = List.of( line[2].split(",") )
+            List<Long> ingredient_ids = List.of( line[2].split(",") )
                     .stream()
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
-            List<Ingredient> ing = idList.stream()
-                    .map(ingredientRepository::findById)
-                    .map(Optional::get)
+            List<Ingredient> ingredientsOfPizza = ingredient_ids.stream()
+                    .map(id -> {
+                        List<Ingredient> ingredient = ingredients.stream().filter(ingredient1 -> ingredient1.getId().equals(id)).collect(Collectors.toList());
+                        return ingredient.get(0);
+                    })
                     .collect(Collectors.toList());
 
-            importedPizzas.add( new Pizza(Long.parseLong(line[0]), line[1], ing) );
+            importedPizzas.add( new Pizza(Long.parseLong(line[0]), line[1], ingredientsOfPizza));
         }
         reader.close();
         return importedPizzas;
+    }
+
+    private List<Ingredient> addPizzasToIngredients(List<Ingredient> ingredients, List<Pizza> pizzas) {
+        return ingredients.stream()
+                .map(ingredient -> {
+                    List<Pizza> pizzasWithIngredient = pizzas.stream()
+                            .filter(pizza -> pizza.getIngredients().contains(ingredient))
+                            .collect(Collectors.toList());
+                    ingredient.setPizzas(pizzasWithIngredient);
+                    return ingredient;
+                })
+                .collect(Collectors.toList());
     }
 
 

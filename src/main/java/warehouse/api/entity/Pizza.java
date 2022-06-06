@@ -1,6 +1,9 @@
 package warehouse.api.entity;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -8,7 +11,7 @@ import java.util.List;
 public class Pizza {
 
     @Id
-    //@Column(name = "pizza_id")
+    @Column(name="pizza_id")
     private Long id;
     @Column(name="name")
     private String name;
@@ -16,12 +19,17 @@ public class Pizza {
     //TODO Requirements: Validate, if ID=010101 exists
     @Column
     @ManyToMany()
-    /*@JoinTable(name = "pizza_ingredients",
-    joinColumns = { @JoinColumn(name = "id") },
-    inverseJoinColumns = { @JoinColumn(name="id") })*/
-    private List<Ingredient> ingredients;
+    @JoinTable(name="pizza_ingredient",
+    joinColumns = { @JoinColumn(name="pizza_id") },
+    inverseJoinColumns = { @JoinColumn(name="ingredient_id") })
+    private List<Ingredient> ingredients = new LinkedList<>();
 
     public Pizza() {}
+
+    public Pizza(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public Pizza(Long id, String name, List<Ingredient> ingredients) {
         this.id = id;
