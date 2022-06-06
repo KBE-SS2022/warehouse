@@ -1,6 +1,5 @@
-package warehouse.api.service;
+package warehouse.api.util;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -10,7 +9,6 @@ import warehouse.api.entity.Pizza;
 
 public class HibernateUtil {
 
-    private static Session session;
     private static SessionFactory sessionFactory;
 
     private static SessionFactory buildSessionFactory() {

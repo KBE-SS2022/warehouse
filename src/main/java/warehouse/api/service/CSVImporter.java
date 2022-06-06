@@ -9,22 +9,17 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
 import warehouse.api.exception.CSVImportFailedException;
-import warehouse.api.repository.IngredientRepository;
-import warehouse.api.repository.PizzaRepository;
+import warehouse.api.exception.UnknownIngredientID;
+import warehouse.api.util.HibernateUtil;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.awt.desktop.ScreenSleepEvent;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,22 +28,15 @@ public class CSVImporter implements InitializingBean {
     private final static String PATH_INGREDIENTS = "src/main/resources/ingredients.csv";
     private final static String PATH_PIZZAS = "src/main/resources/pizzas.csv";
 
-    @Autowired
-    private IngredientRepository ingredientRepository;
-
-    @Autowired
-    private PizzaRepository pizzaRepository;
-
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    private Session session;
 
     @Override
     public void afterPropertiesSet() throws CSVImportFailedException {
-        session = sessionFactory.openSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        List<Ingredient> ingredients = new LinkedList<>();
-        List<Pizza> pizzas = new LinkedList<>();
+        List<Ingredient> ingredients;
+        List<Pizza> pizzas;
         try {
             ingredients = this.importIngredients();
             pizzas = this.importPizzas(ingredients);
@@ -61,8 +49,6 @@ public class CSVImporter implements InitializingBean {
 
         ingredients.forEach(session::save);
         pizzas.forEach(session::save);
-        //ingredients.forEach(ingredientRepository::save);
-        //pizzas.forEach(pizzaRepository::save);
         session.flush();
         session.close();
     }
@@ -81,14 +67,14 @@ public class CSVImporter implements InitializingBean {
                     line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
                     Double.parseDouble(line[7]), Double.parseDouble(line[8]));
             importedIngredients.add(newIngredient);
-
-            session.persist(newIngredient);
         }
         reader.close();
         return importedIngredients;
     }
 
     private List<Pizza> importPizzas(List<Ingredient> ingredients) throws IOException, CsvValidationException {
+        if(ingredients.isEmpty()) throw new NullPointerException("List of ingredients is empty");
+
         List<Pizza> importedPizzas = new LinkedList<>();
 
         FileReader fr = new FileReader(PATH_PIZZAS);
@@ -102,23 +88,32 @@ public class CSVImporter implements InitializingBean {
                     .stream()
                     .map(Long::parseLong)
                     .collect(Collectors.toList());
-            List<Ingredient> ingredientsOfPizza = ingredient_ids.stream()
+
+            List<Ingredient> ingredient_objects = ingredient_ids.stream()
                     .map(id -> {
-                        List<Ingredient> ingredient = ingredients.stream().filter(ingredient1 -> ingredient1.getId().equals(id)).collect(Collectors.toList());
-                        return ingredient.get(0);
+                        List<Ingredient> ingredientList = ingredients.stream()
+                                .filter(ingredient -> ingredient.getId().equals(id))
+                                .collect(Collectors.toList());
+                        if(ingredientList.isEmpty())
+                            throw new UnknownIngredientID("Ingredient id: '" + id + "' could not be found" );
+                        return ingredientList.get(0);
                     })
                     .collect(Collectors.toList());
 
-            Pizza newPizza = new Pizza(Long.parseLong(line[0]), line[1], ingredientsOfPizza);
+            Pizza newPizza = new Pizza(Long.parseLong(line[0]), line[1], ingredient_objects);
             importedPizzas.add(newPizza);
-
-            session.persist(newPizza);
         }
         reader.close();
         return importedPizzas;
     }
 
+    /*
+     *  Method can only be called after Ingredients and Pizzas were successfully imported
+     */
     private List<Ingredient> addPizzasToIngredients(List<Ingredient> ingredients, List<Pizza> pizzas) {
+        if(ingredients.isEmpty()) throw new NullPointerException("List of ingredients is empty");
+        if(pizzas.isEmpty()) throw new NullPointerException("List of pizzas is empty");
+
         return ingredients.stream()
                 .map(ingredient -> {
                     List<Pizza> pizzasWithIngredient = pizzas.stream()
@@ -129,6 +124,4 @@ public class CSVImporter implements InitializingBean {
                 })
                 .collect(Collectors.toList());
     }
-
-
 }
