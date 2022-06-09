@@ -30,11 +30,10 @@ public class CSVImporter implements InitializingBean {
     private final static String PATH_PIZZAS = "src/main/resources/pizzas.csv";
 
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    private static Session session;
 
     @Override
     public void afterPropertiesSet() throws CSVImportFailedException {
-        session = sessionFactory.openSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
 
         List<Ingredient> ingredients;
@@ -49,8 +48,9 @@ public class CSVImporter implements InitializingBean {
         }
         ingredients = addPizzasToIngredients(ingredients, pizzas);
 
-        //ingredients.forEach(session::save);
-        //pizzas.forEach(session::save);
+        ingredients.forEach(session::save);
+        pizzas.forEach(session::save);
+
         session.flush();
         session.close();
     }
@@ -62,8 +62,6 @@ public class CSVImporter implements InitializingBean {
         CSVParser parser = new CSVParserBuilder().withSeparator(';')
                 .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
         CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
-
-        if(!session.isOpen()) throw new SessionException("CSV import of ingredients failed. Session is closed");
 
         String[] line;
         while ( (line = reader.readNext() ) != null) {
@@ -86,8 +84,6 @@ public class CSVImporter implements InitializingBean {
                 .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
         CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
-        if(!session.isOpen()) throw new SessionException("CSV import of pizzas failed. Session is closed");
-
         String[] line;
         while ( (line = reader.readNext() ) != null) {
             List<Long> ingredient_ids = List.of( line[2].split(",") )
@@ -108,7 +104,6 @@ public class CSVImporter implements InitializingBean {
 
             Pizza newPizza = new Pizza(Long.parseLong(line[0]), line[1], ingredient_objects);
             importedPizzas.add(newPizza);
-            session.save(newPizza);
         }
         reader.close();
         return importedPizzas;
