@@ -7,13 +7,14 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
 import org.hibernate.Session;
+import org.hibernate.SessionException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
 import warehouse.api.exception.CSVImportFailedException;
-import warehouse.api.exception.UnknownIngredientID;
+import warehouse.api.exception.IDNotFoundException;
 import warehouse.api.util.HibernateUtil;
 
 import java.io.FileReader;
@@ -62,13 +63,14 @@ public class CSVImporter implements InitializingBean {
                 .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
         CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
+        if(!session.isOpen()) throw new SessionException("CSV import of ingredients failed. Session is closed");
+
         String[] line;
         while ( (line = reader.readNext() ) != null) {
             Ingredient newIngredient = new Ingredient(Long.parseLong(line[0]), line[1],
                     line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
                     Double.parseDouble(line[7]), Double.parseDouble(line[8]));
             importedIngredients.add(newIngredient);
-            session.save(newIngredient);
         }
         reader.close();
         return importedIngredients;
@@ -84,6 +86,8 @@ public class CSVImporter implements InitializingBean {
                 .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
         CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
+        if(!session.isOpen()) throw new SessionException("CSV import of pizzas failed. Session is closed");
+
         String[] line;
         while ( (line = reader.readNext() ) != null) {
             List<Long> ingredient_ids = List.of( line[2].split(",") )
@@ -97,7 +101,7 @@ public class CSVImporter implements InitializingBean {
                                 .filter(ingredient -> ingredient.getId().equals(id))
                                 .collect(Collectors.toList());
                         if(ingredientList.isEmpty())
-                            throw new UnknownIngredientID("Ingredient id: '" + id + "' could not be found" );
+                            throw new IDNotFoundException("Ingredient id: '" + id + "' could not be found" );
                         return ingredientList.get(0);
                     })
                     .collect(Collectors.toList());
