@@ -29,10 +29,11 @@ public class CSVImporter implements InitializingBean {
     private final static String PATH_PIZZAS = "src/main/resources/pizzas.csv";
 
     private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private static Session session;
 
     @Override
     public void afterPropertiesSet() throws CSVImportFailedException {
-        Session session = sessionFactory.openSession();
+        session = sessionFactory.openSession();
         session.beginTransaction();
 
         List<Ingredient> ingredients;
@@ -47,8 +48,8 @@ public class CSVImporter implements InitializingBean {
         }
         ingredients = addPizzasToIngredients(ingredients, pizzas);
 
-        ingredients.forEach(session::save);
-        pizzas.forEach(session::save);
+        //ingredients.forEach(session::save);
+        //pizzas.forEach(session::save);
         session.flush();
         session.close();
     }
@@ -67,6 +68,7 @@ public class CSVImporter implements InitializingBean {
                     line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
                     Double.parseDouble(line[7]), Double.parseDouble(line[8]));
             importedIngredients.add(newIngredient);
+            session.save(newIngredient);
         }
         reader.close();
         return importedIngredients;
@@ -102,6 +104,7 @@ public class CSVImporter implements InitializingBean {
 
             Pizza newPizza = new Pizza(Long.parseLong(line[0]), line[1], ingredient_objects);
             importedPizzas.add(newPizza);
+            session.save(newPizza);
         }
         reader.close();
         return importedPizzas;
