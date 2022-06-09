@@ -1,4 +1,4 @@
-package warehouse.api;
+package com.warehouse.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        try {
+            SpringApplication.run(Application.class, args);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         System.out.println("Greetings");
     }
 }

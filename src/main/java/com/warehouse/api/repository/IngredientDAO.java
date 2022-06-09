@@ -1,4 +1,4 @@
-package warehouse.api.repository;
+package com.warehouse.api.repository;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -6,8 +6,9 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
+import com.warehouse.api.entity.Ingredient;
 import org.springframework.stereotype.Repository;
-import warehouse.api.entity.*;
+import com.warehouse.api.entity.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,24 +16,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.io.FileReader;
 
-@Repository
-public class PizzaDAO {
 
-    private static final List<Pizza> PIZZAS = new ArrayList<>();
+@Repository
+public class IngredientDAO {
+
+    private static final List<Ingredient> INGREDIENTS = new ArrayList<>();
 
     // Load CSV file before apps starts
     static {
-        try(FileReader fr = new FileReader("src/main/resources/pizzas.csv")){
+        try(FileReader fr = new FileReader("src/main/resources/ingredients.csv")){
             CSVParser parser = new CSVParserBuilder().withSeparator(';')
                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
             CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
 
-            String[] line;
-            while ( (line = reader.readNext() ) != null) {
-                PIZZAS.add( new Pizza(Long.parseLong(line[0]), line[1],
-                        new ArrayList<>()) );
-            }
-            reader.close();
+           String[] line;
+           //possible FormatExceptions
+           while ( (line = reader.readNext() ) != null) {
+               INGREDIENTS.add( new Ingredient(Long.parseLong(line[0]), line[1],
+                       line[2], line[3], line[4].charAt(0), Integer.parseInt(line[5]), Integer.parseInt(line[6]),
+                       Double.parseDouble(line[7]), Double.parseDouble(line[8])) );
+           }
+           reader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -42,17 +46,20 @@ public class PizzaDAO {
         }
     }
 
-    public static List<Pizza> getPizzas() {
-        return PIZZAS;
+    public static List<Ingredient> getIngredients() {
+        return INGREDIENTS;
     }
 
-    public void addPizza(Pizza pizza) {
-        PIZZAS.add(pizza);
+    public void addZutat(Ingredient ingredient) {
+        INGREDIENTS.add(ingredient);
     }
 
-    public Pizza getPizza(Long id) {
-        return PIZZAS.stream()
-                .filter( pizza -> pizza.getId().equals(id) )
+    public Ingredient getIngredient(Long id) {
+        return INGREDIENTS.stream()
+                .filter( ingredient -> ingredient.getId().equals(id) )
                 .collect(Collectors.toList()).get(0);
     }
 }
+
+
+

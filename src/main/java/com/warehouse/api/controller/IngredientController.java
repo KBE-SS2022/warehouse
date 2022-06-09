@@ -1,19 +1,22 @@
-package warehouse.api.controller;
+package com.warehouse.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import
+		org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import warehouse.api.entity.Ingredient;
-import warehouse.api.service.IngredientService;
+import com.warehouse.api.entity.Ingredient;
+import com.warehouse.api.exceptions.IngredientNotFoundException;
+import com.warehouse.api.service.IngredientService;
 
 import java.util.List;
 
+
 @RestController
-@RequestMapping
+@RequestMapping(value="ingredient")
 public class IngredientController {
 
 	@Autowired
@@ -26,7 +29,7 @@ public class IngredientController {
 	}
 
 	@GetMapping(path = "/ingredient/{id}", produces = "application/json")
-	public ResponseEntity<Ingredient> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
+	public ResponseEntity<Ingredient> getIngredientById(@PathVariable(value = "id") Long ingredientId) throws IngredientNotFoundException {
 		Ingredient ingredientById = this.ingredientService.getIngredient(ingredientId);
 		return new ResponseEntity<>(ingredientById, HttpStatus.OK);
 	}

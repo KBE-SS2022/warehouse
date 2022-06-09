@@ -1,23 +1,32 @@
-package warehouse.api.entity;
+package com.warehouse.api.entity;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 @Entity
 @Table(name = "Pizza")
 public class Pizza {
+
     @Id
+    @Column(name="pizza_id")
     private Long id;
     @Column(name="name")
     private String name;
 
-    // Requirements: Ingredient "Brot" is mandatory,
-    // each ingredient may only occure once
+    //TODO Requirements: Validate, if ID=010101 exists
     @Column
-    @ManyToMany
-    private List<Ingredient> ingredients;
-
+    @ManyToMany()
+    @JoinTable(name="pizza_ingredient",
+            joinColumns = { @JoinColumn(name="pizza_id") },
+            inverseJoinColumns = { @JoinColumn(name="ingredient_id") })
+    private List<Ingredient> ingredients = new LinkedList<>();
 
     public Pizza() {}
+
+    public Pizza(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public Pizza(Long id, String name, List<Ingredient> ingredients) {
         this.id = id;
