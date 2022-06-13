@@ -1,6 +1,6 @@
-package com.warehouse.api.controller;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.warehouse.api.exceptions.IngredientNotFoundException;
+package com.warehouseapi.controller;
+import warehouse.api.controller.IngredientController;
+import warehouse.api.exceptions.IngredientNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,13 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.warehouse.api.entity.Ingredient;
-import com.warehouse.api.service.IngredientService;
-import org.springframework.test.web.servlet.MvcResult;
+import warehouse.api.entity.Ingredient;
+import warehouse.api.service.IngredientService;
 
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -93,7 +91,7 @@ public class IngredientControllerMockMvcIntegrationTest {
         this.mockMvc.perform(get("/ingredient/ingredient/{id}",20L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("20"))
-                .andExpect(jsonPath("$.name").value("salami"))
+                .andExpect(jsonPath("$.name").value("Salami"))
                 .andExpect(jsonPath("$.brand").value("jaa"))
                 .andExpect(jsonPath("$.countryOrigin").value("italy"))
                 .andExpect(jsonPath("$.nutritionScore").value("d"))
@@ -125,29 +123,5 @@ public class IngredientControllerMockMvcIntegrationTest {
 
     }
 
-    @Test
-    void testGetIngredient_Success() throws Exception {
-       // List<Ingredient> ingredientList=new ArrayList<Ingredient>();
-        //ingredientList.add(ingredient);
-        when(ingredientService.getIngredient(20L)).thenReturn(this.ingredient);
 
-        MvcResult mvcResult=mockMvc.perform(get("/ingredient/ingredients").contentType("application/json")).andExpect(status().isOk()).andReturn();
-        String actualResponseBody = mvcResult.getResponse().getContentAsString();
-        System.out.println(actualResponseBody);
-
-    }
-
-    @Test
-    void testGetIngredient_NotFound() throws Exception {
-        // List<Ingredient> ingredientList=new ArrayList<Ingredient>();
-        //ingredientList.add(ingredient);
-        when(ingredientService.getIngredient(20L)).thenThrow(new IngredientNotFoundException("Ingredient with id :"+20L+" not found in Database"));
-
-         MvcResult mvcResult=mockMvc.perform(get("/ingredient/ingredients",20L).contentType("application/json")).andExpect(status().isNotFound()).andReturn();
-         String actualResponseBody = mvcResult.getResponse().getContentAsString();
-         System.out.println(actualResponseBody);
-
-
-
-    }
 }

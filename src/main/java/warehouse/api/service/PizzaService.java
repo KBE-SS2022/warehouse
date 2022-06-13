@@ -1,10 +1,10 @@
-package com.warehouse.api.service;
+package warehouse.api.service;
 
-import com.warehouse.api.entity.Pizza;
+import warehouse.api.entity.Pizza;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.warehouse.api.exceptions.PizzaNotFoundException;
-import com.warehouse.api.repository.PizzaRepository;
+import warehouse.api.exceptions.PizzaNotFoundException;
+import warehouse.api.repository.PizzaRepository;
 
 import java.util.List;
 

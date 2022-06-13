@@ -1,4 +1,4 @@
-package com.warehouse.api.repository;
+package com.warehouseapi.repository;
 
 public class IngredientEntityRepositoryTest {
 }

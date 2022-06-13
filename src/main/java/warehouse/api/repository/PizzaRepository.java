@@ -1,7 +1,7 @@
-package com.warehouse.api.repository;
+package warehouse.api.repository;
 
 
-import com.warehouse.api.entity.Pizza;
+import warehouse.api.entity.Pizza;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

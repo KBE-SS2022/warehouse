@@ -1,5 +1,8 @@
-package com.warehouse.api.service;
+package com.warehouseapi.service;
 
+import warehouse.api.entity.Ingredient;
+import warehouse.api.entity.Pizza;
+import warehouse.api.service.PizzaService;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,11 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import com.warehouse.api.entity.Ingredient;
-import com.warehouse.api.entity.Pizza;
-import com.warehouse.api.repository.PizzaRepository;
-import com.warehouse.api.exceptions.IngredientNotFoundException;
-import com.warehouse.api.exceptions.PizzaNotFoundException;
+import warehouse.api.repository.PizzaRepository;
+import warehouse.api.exceptions.IngredientNotFoundException;
+import warehouse.api.exceptions.PizzaNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

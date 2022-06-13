@@ -1,10 +1,10 @@
-package com.warehouse.api.service;
+package warehouse.api.service;
 
-import com.warehouse.api.entity.Ingredient;
-import com.warehouse.api.repository.IngredientRepository;
+import warehouse.api.entity.Ingredient;
+import warehouse.api.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.warehouse.api.exceptions.IngredientNotFoundException;
+import warehouse.api.exceptions.IngredientNotFoundException;
 
 import java.util.List;
 

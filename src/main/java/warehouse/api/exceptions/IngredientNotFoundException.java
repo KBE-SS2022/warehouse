@@ -1,4 +1,4 @@
-package com.warehouse.api.exceptions;
+package warehouse.api.exceptions;
 
 public class IngredientNotFoundException extends Exception{
 

@@ -1,4 +1,4 @@
-package com.warehouse.api.controller;
+package warehouse.api.controller;
 
 import
 		org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.warehouse.api.entity.Ingredient;
-import com.warehouse.api.exceptions.IngredientNotFoundException;
-import com.warehouse.api.service.IngredientService;
+import warehouse.api.entity.Ingredient;
+import warehouse.api.exceptions.IngredientNotFoundException;
+import warehouse.api.service.IngredientService;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.warehouse.api.repository;
+package warehouse.api.repository;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -6,9 +6,8 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
-import com.warehouse.api.entity.Ingredient;
+import warehouse.api.entity.Ingredient;
 import org.springframework.stereotype.Repository;
-import com.warehouse.api.entity.*;
 
 import java.io.*;
 import java.util.ArrayList;

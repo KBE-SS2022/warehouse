@@ -1,4 +1,4 @@
-package com.warehouse.api.entity;
+package warehouse.api.entity;
 
 import javax.persistence.*;
 import java.util.LinkedList;

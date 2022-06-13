@@ -1,4 +1,4 @@
-package com.warehouse.api.controller;
+package warehouse.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.warehouse.api.entity.Pizza;
-import com.warehouse.api.exceptions.PizzaNotFoundException;
-import com.warehouse.api.service.PizzaService;
+import warehouse.api.entity.Pizza;
+import warehouse.api.exceptions.PizzaNotFoundException;
+import warehouse.api.service.PizzaService;
 
 
 import java.util.List;

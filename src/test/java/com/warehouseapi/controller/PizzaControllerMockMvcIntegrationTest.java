@@ -1,12 +1,11 @@
-package com.warehouse.api.controller;
+package com.warehouseapi.controller;
 
 
-import com.warehouse.api.entity.Ingredient;
-import com.warehouse.api.entity.Pizza;
-import com.warehouse.api.exceptions.IngredientNotFoundException;
-import com.warehouse.api.exceptions.PizzaNotFoundException;
-import com.warehouse.api.service.IngredientService;
-import com.warehouse.api.service.PizzaService;
+import warehouse.api.controller.PizzaController;
+import warehouse.api.entity.Ingredient;
+import warehouse.api.entity.Pizza;
+import warehouse.api.exceptions.PizzaNotFoundException;
+import warehouse.api.service.PizzaService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -44,9 +43,7 @@ public class PizzaControllerMockMvcIntegrationTest {
     @BeforeAll
     void init () {
         List<Ingredient>ingredientList=new LinkedList<>();
-        ingredientList.add(new Ingredient(20L,"Salami","jaa","italy",'d',350,1,100.0,4.0));
-        ingredientList.add(new Ingredient(101L,"Mozarella","jaa","germany",'c',200,1,200.0,2.5));
-        ingredientList.add(new Ingredient(1011L,"Brot","jaa","spain",'b',150,1,100.0,2.5));
+         ingredientList.add(new Ingredient(1011L,"Brot","jaa","spain",'b',150,1,100.0,2.5));
         this.pizza=new Pizza(10202L,"Salami",ingredientList);
     }
 
@@ -66,7 +63,7 @@ public class PizzaControllerMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.size()", Matchers.is(1)))
                 .andExpect(jsonPath("$.[0].size()", Matchers.is(3)))
                 .andExpect(jsonPath("$[0].id").value("10202"))
-                .andExpect(jsonPath("$[0].ingredients[0].name").value("Salami"))
+                .andExpect(jsonPath("$[0].ingredients[0].name").value("Brot"))
                 .andExpect(jsonPath("$[0].ingredients[0].calories").value(350))
                 .andExpect(jsonPath("$[0].ingredients[0].weight").value(100.0))
                 .andExpect(jsonPath("$[0].ingredients[1].name").value("Mozarella"))
