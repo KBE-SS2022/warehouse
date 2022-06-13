@@ -12,11 +12,11 @@ public class ControllerAdviceExceptionHandling extends ResponseEntityExceptionHa
 
    @ExceptionHandler(IngredientNotFoundException.class)
     public ResponseEntity<String> handleIngredientNotFoundException(IngredientNotFoundException ingredientNotFoundException){
-        return new ResponseEntity<String>   (ingredientNotFoundException.getMessage(),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ingredientNotFoundException.getMessage(),HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(PizzaNotFoundException.class)
     public ResponseEntity<String> handlePizzaNotFoundException(PizzaNotFoundException pizzaNotFoundException){
-        return new ResponseEntity<String>   (pizzaNotFoundException.getMessage(),HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(pizzaNotFoundException.getMessage(),HttpStatus.NOT_FOUND);
     }
 
 

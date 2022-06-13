@@ -1,7 +1,6 @@
 package warehouse.api.controller;
 
-import
-		org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +12,6 @@ import warehouse.api.exceptions.IngredientNotFoundException;
 import warehouse.api.service.IngredientService;
 
 import java.util.List;
-
 
 @RestController
 @RequestMapping(value="ingredient")

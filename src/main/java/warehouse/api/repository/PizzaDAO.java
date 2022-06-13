@@ -21,7 +21,7 @@ public class PizzaDAO {
     private static final List<Pizza> PIZZAS = new ArrayList<>();
 
     // Load CSV file before apps starts
-    static {
+    /*static {
         try(FileReader fr = new FileReader("src/main/resources/pizzas.csv")){
             CSVParser parser = new CSVParserBuilder().withSeparator(';')
                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
@@ -30,7 +30,7 @@ public class PizzaDAO {
             String[] line;
             while ( (line = reader.readNext() ) != null) {
                 PIZZAS.add( new Pizza(Long.parseLong(line[0]), line[1],
-                        new ArrayList<>()) );
+                        null) );
             }
             reader.close();
         } catch (FileNotFoundException e) {
@@ -40,7 +40,7 @@ public class PizzaDAO {
         } catch (CsvValidationException e) {
             e.printStackTrace();
         }
-    }
+    } */
 
     public static List<Pizza> getPizzas() {
         return PIZZAS;
