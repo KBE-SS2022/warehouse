@@ -1,9 +1,10 @@
 package warehouse.api.service;
 
+import warehouse.api.entity.Ingredient;
+import warehouse.api.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import warehouse.api.entity.Ingredient;
-import warehouse.api.repository.IngredientDAO;
+import warehouse.api.exceptions.IngredientNotFoundException;
 
 import java.util.List;
 
@@ -11,13 +12,14 @@ import java.util.List;
 public class IngredientService {
 
     @Autowired
-    private IngredientDAO ingredientDAO;
+    private IngredientRepository ingredientRepository;
+
 
     public List<Ingredient> getIngredients() {
-        return IngredientDAO.getIngredients();
+        return ingredientRepository.findAll();
     }
 
-    public Ingredient getIngredient(Long id) {
-        return ingredientDAO.getIngredient(id);
+    public Ingredient getIngredient(Long id) throws IngredientNotFoundException {
+        return ingredientRepository.findById(id).orElseThrow(()-> new IngredientNotFoundException("Ingredient with id :"+id+" not found in Database"));
     }
 }
