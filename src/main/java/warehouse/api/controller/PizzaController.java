@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import warehouse.api.entity.Pizza;
+import warehouse.api.exceptions.PizzaNotFoundException;
 import warehouse.api.service.PizzaService;
 
 
@@ -28,7 +29,7 @@ public class PizzaController {
 
 
     @GetMapping(path = "/pizza/{id}", produces = "application/json")
-    public ResponseEntity<Pizza> getPizzaById(@PathVariable(value = "id") Long pizzaId) {
+    public ResponseEntity<Pizza> getPizzaById(@PathVariable(value = "id") Long pizzaId) throws PizzaNotFoundException {
         Pizza pizzaById = this.pizzaService.getPizza(pizzaId);
         return new ResponseEntity<>(pizzaById, HttpStatus.OK);
     }
