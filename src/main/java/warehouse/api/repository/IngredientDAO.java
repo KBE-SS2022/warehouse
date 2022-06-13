@@ -22,12 +22,11 @@ public class IngredientDAO {
     private static final List<Ingredient> INGREDIENTS = new ArrayList<>();
 
     // Load CSV file before apps starts
-    static {
+    /*static {
         try(FileReader fr = new FileReader("src/main/resources/ingredients.csv")){
             CSVParser parser = new CSVParserBuilder().withSeparator(';')
                     .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
             CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
-
            String[] line;
            //possible FormatExceptions
            while ( (line = reader.readNext() ) != null) {
@@ -43,7 +42,7 @@ public class IngredientDAO {
         } catch (CsvValidationException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static List<Ingredient> getIngredients() {
         return INGREDIENTS;

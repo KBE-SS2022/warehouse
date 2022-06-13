@@ -3,6 +3,7 @@ package warehouse.api.entity;
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+
 @Entity
 @Table(name = "Pizza")
 public class Pizza {
