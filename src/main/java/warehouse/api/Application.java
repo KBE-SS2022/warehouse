@@ -1,4 +1,4 @@
-package warehouse;
+package warehouse.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
