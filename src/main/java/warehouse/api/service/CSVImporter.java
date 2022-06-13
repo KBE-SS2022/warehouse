@@ -7,7 +7,6 @@ import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvValidationException;
 import org.hibernate.Session;
-import org.hibernate.SessionException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -17,6 +16,7 @@ import warehouse.api.exception.CSVImportFailedException;
 import warehouse.api.exception.IDNotFoundException;
 import warehouse.api.util.HibernateUtil;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -38,6 +38,7 @@ public class CSVImporter implements InitializingBean {
 
         List<Ingredient> ingredients;
         List<Pizza> pizzas;
+
         try {
             ingredients = this.importIngredients();
             pizzas = this.importPizzas(ingredients);
@@ -57,11 +58,7 @@ public class CSVImporter implements InitializingBean {
 
     private List<Ingredient> importIngredients() throws IOException, CsvValidationException {
         List<Ingredient> importedIngredients = new LinkedList<>();
-
-        FileReader fr = new FileReader(PATH_INGREDIENTS);
-        CSVParser parser = new CSVParserBuilder().withSeparator(';')
-                .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
-        CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
+        CSVReader reader = createCSVReader(PATH_INGREDIENTS);
 
         String[] line;
         while ( (line = reader.readNext() ) != null) {
@@ -78,11 +75,7 @@ public class CSVImporter implements InitializingBean {
         if(ingredients.isEmpty()) throw new NullPointerException("List of ingredients is empty");
 
         List<Pizza> importedPizzas = new LinkedList<>();
-
-        FileReader fr = new FileReader(PATH_PIZZAS);
-        CSVParser parser = new CSVParserBuilder().withSeparator(';')
-                .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
-        CSVReader reader = new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
+        CSVReader reader = createCSVReader(PATH_PIZZAS);
 
         String[] line;
         while ( (line = reader.readNext() ) != null) {
@@ -125,5 +118,12 @@ public class CSVImporter implements InitializingBean {
                     return ingredient;
                 })
                 .collect(Collectors.toList());
+    }
+
+    private CSVReader createCSVReader(String path) throws FileNotFoundException {
+        FileReader fr = new FileReader(path);
+        CSVParser parser = new CSVParserBuilder().withSeparator(';')
+                .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
+        return new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
     }
 }
