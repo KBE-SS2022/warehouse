@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import warehouse.api.entity.Pizza;
-import warehouse.api.exceptions.PizzaNotFoundException;
+import warehouse.api.exception.PizzaNotFoundException;
 import warehouse.api.service.PizzaService;
 
 

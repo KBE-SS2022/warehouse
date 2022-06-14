@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import warehouse.api.entity.Ingredient;
-import warehouse.api.exceptions.IngredientNotFoundException;
+import warehouse.api.exception.IngredientNotFoundException;
 import warehouse.api.service.IngredientService;
 
 import java.util.List;

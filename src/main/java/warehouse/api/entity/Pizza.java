@@ -1,8 +1,11 @@
 package warehouse.api.entity;
 
+import warehouse.api.exception.MissingRequiredIngredientException;
+
 import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "Pizza")
@@ -14,7 +17,8 @@ public class Pizza {
     @Column(name="name")
     private String name;
 
-    //TODO Requirements: Validate, if ID=010101 exists
+    private final static Long REQUIRED_INGREDIENT = 010101L;
+
     @Column
     @ManyToMany()
     @JoinTable(name="pizza_ingredient",
@@ -32,6 +36,9 @@ public class Pizza {
     public Pizza(Long id, String name, List<Ingredient> ingredients) {
         this.id = id;
         this.name = name;
+        if(!containsRequiredIngredients(ingredients))
+            throw new MissingRequiredIngredientException(
+                    "Pizza with ID " + id + " doesn´t contain Ingredient with ID " + REQUIRED_INGREDIENT);
         this.ingredients = ingredients;
     }
 
@@ -42,6 +49,13 @@ public class Pizza {
                 ", name='" + name + '\'' +
                 ", ingredients=" + ingredients +
                 '}';
+    }
+
+    private Boolean containsRequiredIngredients(List<Ingredient> ingredients){
+        List<Ingredient> requiredIngredients = ingredients.stream()
+                .filter(ingredient -> ingredient.getId().equals(REQUIRED_INGREDIENT))
+                .collect(Collectors.toList());
+        return !requiredIngredients.isEmpty();
     }
 
     public Long getId() { return id; }

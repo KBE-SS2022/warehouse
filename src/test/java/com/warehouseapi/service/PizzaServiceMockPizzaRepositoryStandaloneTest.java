@@ -11,8 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import warehouse.api.repository.PizzaRepository;
-import warehouse.api.exceptions.IngredientNotFoundException;
-import warehouse.api.exceptions.PizzaNotFoundException;
+import warehouse.api.exception.IngredientNotFoundException;
+import warehouse.api.exception.PizzaNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

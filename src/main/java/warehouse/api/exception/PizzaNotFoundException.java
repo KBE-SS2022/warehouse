@@ -1,7 +1,6 @@
-package warehouse.api.exceptions;
+package warehouse.api.exception;
 
 public class PizzaNotFoundException extends Exception {
-
 
     public PizzaNotFoundException(String message){
         super(message);
