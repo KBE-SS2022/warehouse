@@ -99,7 +99,6 @@ public class PizzaControllerMockMvcIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(0)));
 
-
     }
     @Test
     public void getPizzasWithNotNeededParameterInput_ShouldReturnPizzaList()throws Exception{
