@@ -1,5 +1,6 @@
 package com.warehouseapi.service;
 
+import org.junit.jupiter.api.Assertions;
 import warehouse.api.repository.IngredientRepository;
 import warehouse.api.service.IngredientService;
 import org.junit.Assert;
@@ -35,8 +36,15 @@ class IngredientServiceMockIngredientRepositoryStandAloneTest {
 
 	@Test
 	void getIngredientById_GoodCase() throws IngredientNotFoundException {
-		when(mockedIngredientRepository.findById(20L)).thenReturn(Optional.ofNullable((ingredient)));
-		Assert.assertEquals((ingredient.getId()), ingredientService.getIngredient(20L).getId());
+		when(mockedIngredientRepository.findById(20L)).thenReturn(Optional.ofNullable((this.ingredient)));
+		int i=ingredientService.getIngredient(20L).getCalories();
+		Assert.assertEquals("Salami",ingredientService.getIngredient(20L).getName());
+		Assert.assertEquals("italy",ingredientService.getIngredient(20L).getCountryOrigin());
+		Assert.assertEquals('d',ingredientService.getIngredient(20L).getNutritionScore());
+		Assert.assertEquals(350, (int)(ingredientService.getIngredient(20L).getCalories()));
+		Assert.assertEquals(1,(int)ingredientService.getIngredient(20L).getAmount());
+		Assertions.assertEquals(100.0, (double)ingredientService.getIngredient(20L).getWeight());
+		Assertions.assertEquals(4.0, (double)ingredientService.getIngredient(20L).getPrice());
 
 
 	}
@@ -57,8 +65,13 @@ class IngredientServiceMockIngredientRepositoryStandAloneTest {
 		Ingredient ingredient1 = new Ingredient(30L, "Brot", "noname", "spain", 'b', 200, 1, 100.0, 1.0);
 		List<Ingredient> ingredientList = new ArrayList(Arrays.asList(ingredient1, this.ingredient));
 		when(mockedIngredientRepository.findAll()).thenReturn(ingredientList);
-		Assert.assertEquals("salami", ingredientService.getIngredients().get(0).getName());
-		Assert.assertEquals("Brot", ingredientService.getIngredients().get(1).getName());
+		Assert.assertEquals("Brot",ingredientService.getIngredients().get(0).getName());
+		Assert.assertEquals("noname",ingredientService.getIngredients().get(0).getBrand());
+		Assert.assertEquals("spain",ingredientService.getIngredients().get(0).getCountryOrigin());
+		Assert.assertEquals('b',ingredientService.getIngredients().get(0).getNutritionScore());
+		Assert.assertEquals(200L,(int)ingredientService.getIngredients().get(0).getCalories());
+		Assert.assertEquals("Salami", ingredientService.getIngredients().get(1).getName());
+
 
 	}
 
