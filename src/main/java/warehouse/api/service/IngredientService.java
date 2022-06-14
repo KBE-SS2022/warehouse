@@ -18,7 +18,7 @@ public class IngredientService {
         return ingredientRepository.findAll();
     }
 
-    public Ingredient getIngredient(Long id) throws IngredientNotFoundException {
+    public Ingredient getIngredient(Long id) {
         return ingredientRepository.findById(id).orElseThrow(()->
                 new IngredientNotFoundException("Ingredient with id: " + id + " not found in Database"));
     }

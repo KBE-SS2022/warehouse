@@ -27,7 +27,7 @@ public class IngredientController {
 	}
 
 	@GetMapping(path = "/ingredient/{id}", produces = "application/json")
-	public ResponseEntity<Ingredient> getIngredientById(@PathVariable(value = "id") Long ingredientId) throws IngredientNotFoundException {
+	public ResponseEntity<Ingredient> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
 		Ingredient ingredientById = this.ingredientService.getIngredient(ingredientId);
 		return new ResponseEntity<>(ingredientById, HttpStatus.OK);
 	}

@@ -1,6 +1,6 @@
 package warehouse.api.exception;
 
-public class IngredientNotFoundException extends Exception{
+public class IngredientNotFoundException extends RuntimeException {
 
     public IngredientNotFoundException(String message){
         super(message);

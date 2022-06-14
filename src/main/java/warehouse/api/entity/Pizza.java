@@ -17,7 +17,7 @@ public class Pizza {
     @Column(name="name")
     private String name;
 
-    private final static Long REQUIRED_INGREDIENT = 010101L;
+    private final static Long REQUIRED_INGREDIENT = 10101L;
 
     @Column
     @ManyToMany()
