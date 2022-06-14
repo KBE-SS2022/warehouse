@@ -8,6 +8,7 @@ import warehouse.api.exception.IngredientNotFoundException;
 
 import java.util.List;
 
+
 @Service
 public class IngredientService {
 
