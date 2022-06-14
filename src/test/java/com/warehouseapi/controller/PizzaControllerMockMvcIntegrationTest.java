@@ -4,7 +4,7 @@ package com.warehouseapi.controller;
 import warehouse.api.controller.PizzaController;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
-import warehouse.api.exceptions.PizzaNotFoundException;
+import warehouse.api.exception.PizzaNotFoundException;
 import warehouse.api.service.PizzaService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
