@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import warehouse.api.entity.Ingredient;
-import warehouse.api.exceptions.IngredientNotFoundException;
+import warehouse.api.exception.IngredientNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;

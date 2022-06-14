@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
 import warehouse.api.exception.CSVImportFailedException;
-import warehouse.api.exception.IDNotFoundException;
+import warehouse.api.exception.IngredientNotFoundException;
 import warehouse.api.util.HibernateUtil;
 
 import java.io.FileNotFoundException;
@@ -29,11 +29,11 @@ public class CSVImporter implements InitializingBean {
     private final static String PATH_INGREDIENTS = "src/main/resources/ingredients.csv";
     private final static String PATH_PIZZAS = "src/main/resources/pizzas.csv";
 
-    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private static final SessionFactory SESSION_FACTORY = HibernateUtil.getSessionFactory();
 
     @Override
     public void afterPropertiesSet() throws CSVImportFailedException {
-        Session session = sessionFactory.openSession();
+        Session session = SESSION_FACTORY.openSession();
         session.beginTransaction();
 
         List<Ingredient> ingredients;
@@ -90,7 +90,7 @@ public class CSVImporter implements InitializingBean {
                                 .filter(ingredient -> ingredient.getId().equals(id))
                                 .collect(Collectors.toList());
                         if(ingredientList.isEmpty())
-                            throw new IDNotFoundException("Ingredient id: '" + id + "' could not be found" );
+                            throw new IngredientNotFoundException("Ingredient id: '" + id + "' could not be found" );
                         return ingredientList.get(0);
                     })
                     .collect(Collectors.toList());
