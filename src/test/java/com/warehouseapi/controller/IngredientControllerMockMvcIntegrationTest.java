@@ -1,7 +1,8 @@
 package com.warehouseapi.controller;
 import org.springframework.test.context.ContextConfiguration;
 import warehouse.api.controller.IngredientController;
-import warehouse.api.exception.ControllerAdviceExceptionHandling;
+import warehouse.api.exceptions.ControllerAdviceExceptionHandling;
+import warehouse.api.exceptions.IngredientNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import warehouse.api.entity.Ingredient;
-import warehouse.api.exception.IngredientNotFoundException;
 import warehouse.api.service.IngredientService;
 
 

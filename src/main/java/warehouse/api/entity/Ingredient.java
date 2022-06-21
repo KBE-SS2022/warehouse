@@ -16,9 +16,9 @@ public class Ingredient {
     private String name;
     @Column(name="brand")
     private String brand;
-    @Column(name="country_origin")
+    @Column(name="countryOrigin")
     private String countryOrigin;
-    @Column(name="nutrition_score")
+    @Column(name="nutritionScore")
     private char nutritionScore;
     @Column(name="calories")
     private Integer calories;
