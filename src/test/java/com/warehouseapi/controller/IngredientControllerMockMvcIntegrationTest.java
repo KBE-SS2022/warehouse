@@ -1,8 +1,8 @@
 package com.warehouseapi.controller;
 import org.springframework.test.context.ContextConfiguration;
 import warehouse.api.controller.IngredientController;
-import warehouse.api.exceptions.ControllerAdviceExceptionHandling;
-import warehouse.api.exceptions.IngredientNotFoundException;
+import warehouse.api.exception.ControllerAdviceExceptionHandling;
+import warehouse.api.exception.IngredientNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,8 +42,8 @@ public class IngredientControllerMockMvcIntegrationTest {
     private  IngredientService ingredientService;
 
     private Ingredient ingredient;
-    private String getIngredientListPath="/ingredient/ingredients";
-    private String getIngredientByIdPath="/ingredient/ingredient/{id}";
+    private String getIngredientListPath="/ingredients";
+    private String getIngredientByIdPath="/ingredient/{id}";
     @BeforeAll
     void init () {
         this.ingredient=new Ingredient(20L,"Salami","jaa","italy",'d',350,1,100.0,4.0);

@@ -16,9 +16,7 @@ import warehouse.api.exception.CSVImportFailedException;
 import warehouse.api.exception.IngredientNotFoundException;
 import warehouse.api.util.HibernateUtil;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +24,8 @@ import java.util.stream.Collectors;
 @Component
 public class CSVImporter implements InitializingBean {
 
-    private final static String PATH_INGREDIENTS = "src/main/resources/ingredients.csv";
-    private final static String PATH_PIZZAS = "src/main/resources/pizzas.csv";
+    private final static String PATH_INGREDIENTS = "ingredients.csv";
+    private final static String PATH_PIZZAS = "pizzas.csv";
 
     private static final SessionFactory SESSION_FACTORY = HibernateUtil.getSessionFactory();
 
@@ -43,7 +41,7 @@ public class CSVImporter implements InitializingBean {
             ingredients = this.importIngredients();
             pizzas = this.importPizzas(ingredients);
         } catch (IOException e) {
-            throw new CSVImportFailedException("Failed to read CSV file");
+            throw new CSVImportFailedException(e.getMessage());
         } catch (CsvValidationException e){
             throw new CSVImportFailedException("CSV file not valid");
         }
@@ -120,10 +118,13 @@ public class CSVImporter implements InitializingBean {
                 .collect(Collectors.toList());
     }
 
-    private CSVReader createCSVReader(String path) throws FileNotFoundException {
-        FileReader fr = new FileReader(path);
+    private CSVReader createCSVReader(String path) throws IOException {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(path);
+        if(stream == null) throw new IOException();
+        Reader reader = new InputStreamReader(stream);
+
         CSVParser parser = new CSVParserBuilder().withSeparator(';')
                 .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES).build();
-        return new CSVReaderBuilder(fr).withSkipLines(1).withCSVParser(parser).build();
+        return new CSVReaderBuilder(reader).withSkipLines(1).withCSVParser(parser).build();
     }
 }
