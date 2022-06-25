@@ -13,7 +13,7 @@ import warehouse.api.service.IngredientService;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="ingredient")
+@RequestMapping
 public class IngredientController {
 
 	@Autowired

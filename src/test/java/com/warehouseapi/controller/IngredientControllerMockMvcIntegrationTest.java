@@ -42,8 +42,8 @@ public class IngredientControllerMockMvcIntegrationTest {
     private  IngredientService ingredientService;
 
     private Ingredient ingredient;
-    private String getIngredientListPath="/ingredient/ingredients";
-    private String getIngredientByIdPath="/ingredient/ingredient/{id}";
+    private String getIngredientListPath="/ingredients";
+    private String getIngredientByIdPath="/ingredient/{id}";
     @BeforeAll
     void init () {
         this.ingredient=new Ingredient(20L,"Salami","jaa","italy",'d',350,1,100.0,4.0);
