@@ -118,7 +118,7 @@ public class Ingredient {
 
     public void setPizzas(List<Pizza> pizzas) { this.pizzas = pizzas; }
 
-    private List<Long> getPizzaIDs(){
+    public List<Long> getPizzaIDs(){
         return pizzas.stream().map(Pizza::getId).collect(Collectors.toList());
     }
 }
