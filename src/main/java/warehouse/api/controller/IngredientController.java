@@ -7,10 +7,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import warehouse.api.dto.IngredientDTO;
 import warehouse.api.entity.Ingredient;
+import warehouse.api.service.DTOMapper;
 import warehouse.api.service.IngredientService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping
@@ -18,16 +21,21 @@ public class IngredientController {
 
 	@Autowired
 	private IngredientService ingredientService;
+	@Autowired
+	private DTOMapper mapper;
 
 	@GetMapping(path = "/ingredients", produces = "application/json")
-	public ResponseEntity<List<Ingredient>> getIngredients() {
+	public ResponseEntity<List<IngredientDTO>> getIngredients() {
 		List<Ingredient> allIngredients = ingredientService.getIngredients();
-		return new ResponseEntity<>(allIngredients, HttpStatus.OK);
+		List<IngredientDTO> allIngredientsDTO = allIngredients.stream()
+				.map(ingredient -> mapper.toIngredientDTO(ingredient)).collect(Collectors.toList());
+		return new ResponseEntity<>(allIngredientsDTO, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/ingredient/{id}", produces = "application/json")
-	public ResponseEntity<Ingredient> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
+	public ResponseEntity<IngredientDTO> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
 		Ingredient ingredientById = this.ingredientService.getIngredient(ingredientId);
-		return new ResponseEntity<>(ingredientById, HttpStatus.OK);
+		IngredientDTO ingredientByIDDTO = mapper.toIngredientDTO(ingredientById);
+		return new ResponseEntity<>(ingredientByIDDTO, HttpStatus.OK);
 	}
 }
