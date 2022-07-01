@@ -1,5 +1,7 @@
 package com.warehouseapi.controller;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import warehouse.api.Application;
 import warehouse.api.controller.IngredientController;
 import warehouse.api.exception.ControllerAdviceExceptionHandling;
 import warehouse.api.exception.IngredientNotFoundException;
