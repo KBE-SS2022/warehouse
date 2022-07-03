@@ -32,6 +32,16 @@ public class IngredientController {
 		return new ResponseEntity<>(allIngredientsDTO, HttpStatus.OK);
 	}
 
+	/*
+	@GetMapping(path = "/ingredients", produces = "application/json")
+	public ResponseEntity<List<Ingredient>> getIngredients() {
+		List<Ingredient> allIngredients = ingredientService.getIngredients();
+		//List<IngredientDTO> allIngredientsDTO = allIngredients.stream()
+				//.map(ingredient -> mapper.toIngredientDTO(ingredient)).collect(Collectors.toList());
+		return new ResponseEntity<>(allIngredients, HttpStatus.OK);
+	}
+	*/
+
 	@GetMapping(path = "/ingredient/{id}", produces = "application/json")
 	public ResponseEntity<IngredientDTO> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
 		Ingredient ingredientById = this.ingredientService.getIngredient(ingredientId);
