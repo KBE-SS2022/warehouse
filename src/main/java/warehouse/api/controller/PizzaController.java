@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import warehouse.api.entity.Pizza;
+import warehouse.api.dto.PizzaDTO;
 import warehouse.api.exception.PizzaNotFoundException;
 import warehouse.api.service.PizzaService;
 
@@ -21,16 +21,16 @@ public class PizzaController {
     @Autowired
     private PizzaService pizzaService;
 
+
     @GetMapping(path = "/pizzas", produces = "application/json")
-    public ResponseEntity<List<Pizza>> getPizzas() {
-        List<Pizza> allPizzas = pizzaService.getPizzas();
+    public ResponseEntity<List<PizzaDTO>> getPizzas() {
+        List<PizzaDTO> allPizzas = pizzaService.getPizzas();
         return new ResponseEntity<>(allPizzas,HttpStatus.OK);
     }
 
-
     @GetMapping(path = "/pizza/{id}", produces = "application/json")
-    public ResponseEntity<Pizza> getPizzaById(@PathVariable(value = "id") Long pizzaId) throws PizzaNotFoundException {
-        Pizza pizzaById = this.pizzaService.getPizza(pizzaId);
+    public ResponseEntity<PizzaDTO> getPizzaById(@PathVariable(value = "id") Long pizzaId) throws PizzaNotFoundException {
+        PizzaDTO pizzaById = this.pizzaService.getPizza(pizzaId);
         return new ResponseEntity<>(pizzaById, HttpStatus.OK);
     }
 }

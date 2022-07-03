@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import warehouse.api.entity.Ingredient;
+import warehouse.api.dto.IngredientDTO;
 import warehouse.api.service.IngredientService;
 
 import java.util.List;
@@ -20,14 +20,14 @@ public class IngredientController {
 	private IngredientService ingredientService;
 
 	@GetMapping(path = "/ingredients", produces = "application/json")
-	public ResponseEntity<List<Ingredient>> getIngredients() {
-		List<Ingredient> allIngredients = ingredientService.getIngredients();
+	public ResponseEntity<List<IngredientDTO>> getIngredients() {
+		List<IngredientDTO> allIngredients = ingredientService.getIngredients();
 		return new ResponseEntity<>(allIngredients, HttpStatus.OK);
 	}
 
 	@GetMapping(path = "/ingredient/{id}", produces = "application/json")
-	public ResponseEntity<Ingredient> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
-		Ingredient ingredientById = this.ingredientService.getIngredient(ingredientId);
+	public ResponseEntity<IngredientDTO> getIngredientById(@PathVariable(value = "id") Long ingredientId) {
+		IngredientDTO ingredientById = this.ingredientService.getIngredient(ingredientId);
 		return new ResponseEntity<>(ingredientById, HttpStatus.OK);
 	}
 }

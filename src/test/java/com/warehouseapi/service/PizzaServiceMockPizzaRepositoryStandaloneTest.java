@@ -1,12 +1,12 @@
 package com.warehouseapi.service;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.*;
+import warehouse.api.dto.PizzaDTO;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
+import warehouse.api.service.DTOMapper;
 import warehouse.api.service.PizzaService;
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,55 +15,49 @@ import warehouse.api.repository.PizzaRepository;
 import warehouse.api.exception.IngredientNotFoundException;
 import warehouse.api.exception.PizzaNotFoundException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
 
-
 @ExtendWith(SpringExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PizzaServiceMockPizzaRepositoryStandaloneTest {
+
     @Mock
     PizzaRepository pizzaRepository;
+    @Mock
+    DTOMapper dtoMapper;
 
-    private Pizza pizza;
     @InjectMocks
     private PizzaService pizzaService;
 
-    @BeforeEach
-    public void init(){
-        List<Ingredient> ingredientList=new ArrayList<>();
-        ingredientList.add(new Ingredient(20L,"Salami","jaa","italy",'d',350,1,100.0,4.0));
-        ingredientList.add(new Ingredient(101L,"Mozarella","jaa","germany",'c',200,1,200.0,2.5));
-        ingredientList.add(new Ingredient(1011L,"Brot","jaa","spain",'b',150,1,100.0,2.5));
+    private Pizza pizza;
 
-        this.pizza= new Pizza(10111L,"Salami",ingredientList);
+    @BeforeAll
+    public void init() {
+        List<Ingredient> ingredientList = new LinkedList<>();
+        ingredientList.add(new Ingredient(20L,"Salami","jaa","italy",'d',
+                350,1,100.0,4.0));
+        ingredientList.add(new Ingredient(101L,"Mozarella","jaa","germany",'c',
+                200,1,200.0,2.5));
+        ingredientList.add(new Ingredient(10101L,"Brot","jaa","spain",'b',
+                150,1,100.0,2.5));
 
-
+        this.pizza = new Pizza(10111L,"Salami", ingredientList);
     }
-
 
     @Test
     void getPizzaById_ExpectGoodCase() throws  PizzaNotFoundException {
-        when(pizzaRepository.findById(10111L)).thenReturn(Optional.ofNullable((this.pizza) ));
-        Assert.assertEquals((pizza.getId()),pizzaService.getPizza(10111L).getId());
-        Assert.assertEquals("Salami",(pizzaService.getPizza(10111L).getIngredients().get(0).getName()));
-        Assert.assertEquals("jaa",(pizzaService.getPizza(10111L).getIngredients().get(0).getBrand()));
-        Assert.assertEquals("italy",(pizzaService.getPizza(10111L).getIngredients().get(0).getCountryOrigin()));
-        Assert.assertEquals('d',(pizzaService.getPizza(10111L).getIngredients().get(0).getNutritionScore()));
-        Assert.assertEquals(350,(int)((pizzaService.getPizza(10111L).getIngredients().get(0).getCalories())));
-        Assert.assertEquals(1,(int)(pizzaService.getPizza(10111L).getIngredients().get(0).getAmount()));
-        Assertions.assertEquals(100.0, (double)(pizzaService.getPizza(10111L).getIngredients().get(0).getWeight()));
-        Assertions.assertEquals(4.0, (double)(pizzaService.getPizza(10111L).getIngredients().get(0).getPrice()));
+        PizzaDTO dto = new PizzaDTO(10111L,"Salami", List.of(20L, 101L, 10101L));
 
-        Assert.assertEquals("Mozarella",(pizza.getIngredients()).get(1).getName());
-        Assert.assertEquals("Brot",(pizza.getIngredients()).get(2).getName());
+        when(pizzaRepository.findById(10111L)).thenReturn(Optional.of(this.pizza));
+        when(dtoMapper.toPizzaDTO(pizza)).thenReturn(dto);
 
-
-
-
+        Assert.assertEquals((pizza.getId()), pizzaService.getPizza(10111L).getId());
+        Assert.assertEquals(pizza.getName(), pizzaService.getPizza(10111L).getName());
+        Assert.assertEquals(20L, (long)pizzaService.getPizza(10111L).getIngredientIDs().get(0));
+        Assert.assertEquals(101L, (long)pizzaService.getPizza(10111L).getIngredientIDs().get(1));
+        Assert.assertEquals(10101L,(long)pizzaService.getPizza(10111L).getIngredientIDs().get(2));
     }
     @Test
     void getPizzaByIdNotFoundException() throws IngredientNotFoundException {
@@ -71,31 +65,41 @@ class PizzaServiceMockPizzaRepositoryStandaloneTest {
         PizzaNotFoundException thrown = Assert.assertThrows(PizzaNotFoundException.class,() ->{
             pizzaService.getPizza(20L);
         });
-        Assert.assertEquals("Pizza with id:20not found in Database", thrown.getMessage());
-
-
-
+        Assert.assertEquals("Pizza with id: 20 not found in Database", thrown.getMessage());
     }
     @Test
-    void getPizzas_ShouldReturnPizzaList(){
-        List<Ingredient> ingredientList2=new ArrayList<>();
-        ingredientList2.add(new Ingredient(20L,"Thunfisch","jaa","italy",'d',350,1,100.0,4.0));
-        ingredientList2.add(new Ingredient(101L,"Mozarella","jaa","germany",'c',200,1,200.0,2.5));
-        ingredientList2.add(new Ingredient(1011L,"Brot","jaa","spain",'b',150,1,100.0,2.5));
-        Pizza pizza2=new Pizza(3001L,"Thunfisch",ingredientList2);
-        List<Pizza> pizzaList = new ArrayList(Arrays.asList(this.pizza, pizza2));
+    void getPizzas_ShouldReturnPizzaList() {
+        List<Ingredient> ingredientList1 = new LinkedList<>();
+        ingredientList1.add(new Ingredient(20L,"Thunfisch","jaa","italy",'d',350,1,100.0,4.0));
+        ingredientList1.add(new Ingredient(101L,"Mozarella","jaa","germany",'c',200,1,200.0,2.5));
+        ingredientList1.add(new Ingredient(10101L,"Brot","jaa","spain",'b',150,1,100.0,2.5));
+        Pizza pizza1 = new Pizza(3001L,"Thunfisch", ingredientList1);
+        List<Pizza> pizzaList = List.of(this.pizza, pizza1);
+
+        PizzaDTO dto = new PizzaDTO(10111L,"Salami", List.of(20L, 101L, 10101L));
+        PizzaDTO dto1 = new PizzaDTO(3001L, "Thunfisch", List.of(20L, 101L, 10101L));
+
         when(pizzaRepository.findAll()).thenReturn(pizzaList);
-        Assert.assertEquals("Salami", pizzaService.getPizzas().get(0).getName());
-        Assert.assertEquals("Thunfisch", pizzaService.getPizzas().get(1).getName());
-        Assert.assertEquals("Salami", pizzaService.getPizzas().get(0).getIngredients().get(0).getName());
-        Assert.assertEquals("Thunfisch", pizzaService.getPizzas().get(1).getIngredients().get(0).getName());
+        when(pizzaRepository.findById(10111L)).thenReturn(Optional.of(this.pizza));
+        when(pizzaRepository.findById(3001L)).thenReturn(Optional.of(pizza1));
+        when(dtoMapper.toPizzaDTO(this.pizza)).thenReturn(dto);
+        when(dtoMapper.toPizzaDTO(pizza1)).thenReturn(dto1);
+
+        Assert.assertEquals(10111L, (long)pizzaService.getPizzas().get(0).getId());
+        Assert.assertEquals(3001L, (long)pizzaService.getPizzas().get(1).getId());
+        Assert.assertEquals("Salami", pizzaService.getPizza(10111L).getName());
+        Assert.assertEquals("Thunfisch", pizzaService.getPizza(3001L).getName());
+        Assert.assertEquals(20L, (long)pizzaService.getPizza(10111L).getIngredientIDs().get(0));
+        Assert.assertEquals(101L, (long)pizzaService.getPizza(10111L).getIngredientIDs().get(1));
+        Assert.assertEquals(10101L, (long)pizzaService.getPizza(10111L).getIngredientIDs().get(2));
+        Assert.assertEquals(20L, (long)pizzaService.getPizza(3001L).getIngredientIDs().get(0));
+        Assert.assertEquals(101L, (long)pizzaService.getPizza(3001L).getIngredientIDs().get(1));
+        Assert.assertEquals(10101L,(long)pizzaService.getPizza(3001L).getIngredientIDs().get(2));
     }
     @Test
-    void getPizzas_ShouldReturnEmptyPizzaList(){
-        List<Pizza>emptyPizzaList=new ArrayList<>();
+    void getPizzas_ShouldReturnEmptyPizzaList() {
+        List<Pizza>emptyPizzaList = new LinkedList<>();
         when(pizzaRepository.findAll()).thenReturn(emptyPizzaList);
-        Assert.assertEquals(0,pizzaService.getPizzas().size());
+        Assert.assertEquals(0, pizzaService.getPizzas().size());
     }
-
-
 }
