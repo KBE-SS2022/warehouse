@@ -1,16 +1,14 @@
 package com.warehouseapi.controller;
 
+import org.junit.jupiter.api.*;
 import org.springframework.test.context.ContextConfiguration;
 import warehouse.api.controller.PizzaController;
-import warehouse.api.dto.PizzaDTO;
-import warehouse.api.exception.ControllerAdviceExceptionHandling;
-import warehouse.api.exception.PizzaNotFoundException;
-import warehouse.api.service.DTOMapper;
+import warehouse.api.service.PizzaDTOMapper;
+import warehouse.dto.PizzaDTO;
+import warehouse.exception.ControllerAdviceExceptionHandling;
+import warehouse.exception.PizzaNotFoundException;
 import warehouse.api.service.PizzaService;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,8 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,99 +37,100 @@ public class PizzaControllerMockMvcIntegrationTest {
     @MockBean
     private PizzaService pizzaService;
     @MockBean
-    private DTOMapper dtoMapper;
+    private PizzaDTOMapper pizzaDtoMapper;
 
     private PizzaDTO pizza;
-    private List<Long> ingredientIDList;
+    private PizzaDTO pizzaNew;
+    private Map<Long,Double> ingredientIdToPrice;
     private final String getPizzaListPath = "/pizzas";
     private final String getPizzaByIdPath = "/pizza/{id}";
 
     @BeforeAll
     void init () {
-        ingredientIDList = List.of(10101L, 10102L, 10103L);
-        this.pizza = new PizzaDTO(10202L,"Salami", ingredientIDList);
+        ingredientIdToPrice = Map.of(10101L, 1.00, 10102L, 2.50, 10105L, 1.50);
+        pizza = new PizzaDTO(10L,"Salami", ingredientIdToPrice);
+        pizzaNew = new PizzaDTO(10206L,"Thunfisch", ingredientIdToPrice);
     }
 
     @Test
     void testMockMvcCreation(){
-        assertNotNull(mockMvc);
+        Assertions.assertNotNull(mockMvc);
     }
 
     @Test
     public void getPizzas_ShouldReturnPizzaList() throws Exception {
-        PizzaDTO pizza1 = new PizzaDTO(10206L,"Thunfisch", ingredientIDList);
-        when(this.pizzaService.getPizzas()).thenReturn(List.of(this.pizza, pizza1));
+        when(pizzaService.getPizzas()).thenReturn(List.of(pizza, pizzaNew));
 
-        this.mockMvc.perform(get(this.getPizzaListPath).contentType("application/json"))
+        mockMvc.perform(get(getPizzaListPath).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(2)))
                 .andExpect(jsonPath("$.[0].size()", Matchers.is(3)))
-                .andExpect(jsonPath("$[0].id").value("10202"))
+                .andExpect(jsonPath("$[0].id").value("10"))
                 .andExpect(jsonPath("$[0].name").value("Salami"))
-                .andExpect(jsonPath("$[0].ingredientIDs[0]").value(10101L))
-                .andExpect(jsonPath("$[0].ingredientIDs[1]").value(10102L))
-                .andExpect(jsonPath("$[0].ingredientIDs[2]").value(10103L))
+                .andExpect(jsonPath("$[0].ingredientIdToPrice", Matchers.hasKey("10101")))
+                .andExpect(jsonPath("$[0].ingredientIdToPrice", Matchers.hasKey("10102")))
+                .andExpect(jsonPath("$[0].ingredientIdToPrice", Matchers.hasKey("10105")))
 
                 .andExpect(jsonPath("$.[1].size()", Matchers.is(3)))
                 .andExpect(jsonPath("$[1].id").value("10206"))
                 .andExpect(jsonPath("$[1].name").value("Thunfisch"))
-                .andExpect(jsonPath("$[1].ingredientIDs[0]").value(10101L))
-                .andExpect(jsonPath("$[1].ingredientIDs[1]").value(10102L))
-                .andExpect(jsonPath("$[1].ingredientIDs[2]").value(10103L));
+                .andExpect(jsonPath("$[1].ingredientIdToPrice", Matchers.hasKey("10101")))
+                .andExpect(jsonPath("$[1].ingredientIdToPrice", Matchers.hasKey("10102")))
+                .andExpect(jsonPath("$[1].ingredientIdToPrice", Matchers.hasKey("10105")));
     }
     @Test
     public void getPizzas_ShouldReturnEmptyList() throws Exception {
         List<PizzaDTO> emptyList = new LinkedList<>();
 
-        when(this.pizzaService.getPizzas()).thenReturn(emptyList);
-        this.mockMvc.perform(get(this.getPizzaListPath).contentType("application/json"))
+        when(pizzaService.getPizzas()).thenReturn(emptyList);
+        mockMvc.perform(get(getPizzaListPath).contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(0)));
     }
     @Test
     public void getPizzasWithNotNeededParameterInput_ShouldReturnPizzaList()throws Exception{
-        PizzaDTO pizza1 = new PizzaDTO(10206L,"Thunfisch", ingredientIDList);
-        when(this.pizzaService.getPizzas()).thenReturn(List.of(this.pizza, pizza1));
+        when(pizzaService.getPizzas()).thenReturn(List.of(pizza, pizzaNew));
 
-        this.mockMvc.perform(get(this.getPizzaListPath,"extraInputString",20).contentType("application/json"))
+        mockMvc.perform(get(getPizzaListPath,"extraInputString",20).contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(2)))
                 .andExpect(jsonPath("$.[0].size()", Matchers.is(3)))
-                .andExpect(jsonPath("$[0].id").value("10202"))
+                .andExpect(jsonPath("$[0].id").value("10"))
                 .andExpect(jsonPath("$[0].name").value("Salami"))
-                .andExpect(jsonPath("$[0].ingredientIDs[0]").value(10101L))
-                .andExpect(jsonPath("$[0].ingredientIDs[1]").value(10102L))
-                .andExpect(jsonPath("$[0].ingredientIDs[2]").value(10103L))
+                .andExpect(jsonPath("$[0].ingredientIdToPrice", Matchers.hasKey("10101")))
+                .andExpect(jsonPath("$[0].ingredientIdToPrice", Matchers.hasKey("10102")))
+                .andExpect(jsonPath("$[0].ingredientIdToPrice", Matchers.hasKey("10105")))
 
                 .andExpect(jsonPath("$.[1].size()", Matchers.is(3)))
                 .andExpect(jsonPath("$[1].id").value("10206"))
                 .andExpect(jsonPath("$[1].name").value("Thunfisch"))
-                .andExpect(jsonPath("$[1].ingredientIDs[0]").value(10101L))
-                .andExpect(jsonPath("$[1].ingredientIDs[1]").value(10102L))
-                .andExpect(jsonPath("$[1].ingredientIDs[2]").value(10103L));
+                .andExpect(jsonPath("$[1].ingredientIdToPrice", Matchers.hasKey("10101")))
+                .andExpect(jsonPath("$[1].ingredientIdToPrice", Matchers.hasKey("10102")))
+                .andExpect(jsonPath("$[1].ingredientIdToPrice", Matchers.hasKey("10105")));
     }
     @Test
     public void getPizzaByID_ShouldGetPizzaByID() throws Exception {
-        when(this.pizzaService.getPizza(10202L)).thenReturn(this.pizza);
+        when(this.pizzaService.getPizza(10L)).thenReturn(this.pizza);
 
-        this.mockMvc.perform(get(this.getPizzaByIdPath,10202L).contentType(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get(this.getPizzaByIdPath,10L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(3)))
-                .andExpect(jsonPath("$.id").value("10202"))
+                .andExpect(jsonPath("$.id").value("10"))
                 .andExpect(jsonPath("$.name").value("Salami"))
-                .andExpect(jsonPath("$.ingredientIDs[0]").value(10101L))
-                .andExpect(jsonPath("$.ingredientIDs[1]").value(10102L))
-                .andExpect(jsonPath("$.ingredientIDs[2]").value(10103L));
+                .andExpect(jsonPath("$.ingredientIdToPrice", Matchers.hasKey("10101")))
+                .andExpect(jsonPath("$.ingredientIdToPrice", Matchers.hasKey("10102")))
+                .andExpect(jsonPath("$.ingredientIdToPrice", Matchers.hasKey("10105")));
     }
     @Test
-    public void getPizzaById_ShouldGetPizzatNotFoundResponse() throws Exception {
-        when(this.pizzaService.getPizza(20L)).thenThrow(new PizzaNotFoundException("Pizza with id :20 not found in Database"));
-        this.mockMvc.perform(get(this.getPizzaByIdPath,20L).contentType(MediaType.APPLICATION_JSON))
+    public void getPizzaById_ShouldGetPizzaNotFoundResponse() throws Exception {
+        when(this.pizzaService.getPizza(20L)).thenThrow(new PizzaNotFoundException(20L));
+
+        mockMvc.perform(get(getPizzaByIdPath,20L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
     @Test
     public void getPizzaById_ShouldGetBadRequestResponse() throws Exception {
-        this.mockMvc.perform(get(this.getPizzaByIdPath,"extraInputVariable").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getPizzaByIdPath,"extraInputVariable").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 }

@@ -1,10 +1,10 @@
 package warehouse.api.service;
 
-import warehouse.api.dto.PizzaDTO;
+import warehouse.dto.PizzaDTO;
 import warehouse.api.entity.Pizza;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import warehouse.api.exception.PizzaNotFoundException;
+import warehouse.exception.PizzaNotFoundException;
 import warehouse.api.repository.PizzaRepository;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class PizzaService {
 
     @Autowired
-    DTOMapper dtoMapper;
+    PizzaDTOMapper dtoMapper;
     @Autowired
     private PizzaRepository pizzaRepository;
 
@@ -27,7 +27,7 @@ public class PizzaService {
 
     public PizzaDTO getPizza(Long id) throws PizzaNotFoundException {
         Pizza pizza =  pizzaRepository.findById(id).orElseThrow(()->
-                new PizzaNotFoundException("Pizza with id: " + id + " not found in Database"));
+                new PizzaNotFoundException(id));
         return dtoMapper.toPizzaDTO(pizza);
     }
 }

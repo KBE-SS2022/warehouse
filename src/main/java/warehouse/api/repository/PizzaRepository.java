@@ -1,6 +1,5 @@
 package warehouse.api.repository;
 
-
 import warehouse.api.entity.Pizza;
 import org.springframework.data.jpa.repository.JpaRepository;
 

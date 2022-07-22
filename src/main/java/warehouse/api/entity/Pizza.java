@@ -1,9 +1,8 @@
 package warehouse.api.entity;
 
-import warehouse.api.exception.MissingRequiredIngredientException;
+import warehouse.exception.MissingRequiredIngredientException;
 
 import javax.persistence.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,21 +23,15 @@ public class Pizza {
     @JoinTable(name="pizza_ingredient",
             joinColumns = { @JoinColumn(name="pizza_id") },
             inverseJoinColumns = { @JoinColumn(name="ingredient_id") })
-    private List<Ingredient> ingredients = new LinkedList<>();
+    private List<Ingredient> ingredients;
 
     public Pizza() {}
-
-    public Pizza(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     public Pizza(Long id, String name, List<Ingredient> ingredients) {
         this.id = id;
         this.name = name;
         if(!containsRequiredIngredients(ingredients))
-            throw new MissingRequiredIngredientException(
-                    "Pizza with ID " + id + " doesn´t contain Ingredient with ID " + REQUIRED_INGREDIENT);
+            throw new MissingRequiredIngredientException(id, REQUIRED_INGREDIENT);
         this.ingredients = ingredients;
     }
 
@@ -67,6 +60,4 @@ public class Pizza {
     public void setName(String name) { this.name = name; }
 
     public List<Ingredient> getIngredients() { return ingredients; }
-
-    public void setIngredients(List<Ingredient> ingredients) { this.ingredients = ingredients; }
 }

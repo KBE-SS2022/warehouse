@@ -12,9 +12,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.entity.Pizza;
-import warehouse.api.exception.CSVImportFailedException;
-import warehouse.api.exception.IngredientNotFoundException;
-import warehouse.api.util.HibernateUtil;
+import warehouse.exception.CSVImportFailedException;
+import warehouse.exception.IngredientNotFoundException;
+import warehouse.util.HibernateUtil;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -88,7 +88,7 @@ public class CSVImporter implements InitializingBean {
                                 .filter(ingredient -> ingredient.getId().equals(id))
                                 .collect(Collectors.toList());
                         if(ingredientList.isEmpty())
-                            throw new IngredientNotFoundException("Ingredient id: '" + id + "' could not be found" );
+                            throw new IngredientNotFoundException(id);
                         return ingredientList.get(0);
                     })
                     .collect(Collectors.toList());
