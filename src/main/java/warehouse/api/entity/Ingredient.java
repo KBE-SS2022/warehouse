@@ -32,7 +32,6 @@ public class Ingredient {
     @ManyToMany(mappedBy = "ingredients")
     private List<Pizza> pizzas = new LinkedList<>();
 
-
     public Ingredient() {}
 
     public Ingredient(Long id, String name, String brand, String countryOrigin, char nutritionScore,
@@ -106,5 +105,3 @@ public class Ingredient {
         return pizzas.stream().map(Pizza::getId).collect(Collectors.toList());
     }
 }
-
-
