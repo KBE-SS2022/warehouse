@@ -88,33 +88,17 @@ public class Ingredient {
 
     public String getBrand() { return brand; }
 
-    public void setBrand(String brand) { this.brand = brand; }
-
     public String getCountryOrigin() { return countryOrigin; }
-
-    public void setCountryOrigin(String countryOrigin) { this.countryOrigin = countryOrigin; }
 
     public char getNutritionScore() { return nutritionScore; }
 
-    public void setNutritionScore(char nutritionScore) { this.nutritionScore = nutritionScore; }
-
     public Integer getCalories() { return calories; }
-
-    public void setCalories(Integer calories) { this.calories = calories; }
 
     public Integer getAmount() { return amount; }
 
-    public void setAmount(Integer amount) { this.amount = amount; }
-
     public Double getWeight() { return weight; }
 
-    public void setWeight(Double weight) { this.weight = weight; }
-
     public Double getPrice() { return price; }
-
-    public void setPrice(Double price) { this.price = price; }
-
-    public List<Pizza> getPizzas() { return pizzas; }
 
     public void setPizzas(List<Pizza> pizzas) { this.pizzas = pizzas; }
 

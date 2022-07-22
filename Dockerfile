@@ -18,6 +18,6 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
-ENTRYPOINT ["java","-cp","app:app/lib/*","warehouse.api.Application"]
+ENTRYPOINT ["java","-cp","app:app/lib/*","warehouse.Application"]
 
-EXPOSE 8080
+EXPOSE 9001

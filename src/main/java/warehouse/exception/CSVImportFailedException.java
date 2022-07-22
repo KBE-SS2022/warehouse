@@ -1,4 +1,4 @@
-package warehouse.api.exception;
+package warehouse.exception;
 
 public class CSVImportFailedException extends RuntimeException {
 

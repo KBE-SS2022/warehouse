@@ -1,10 +1,12 @@
 package com.warehouseapi.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.springframework.test.context.ContextConfiguration;
 import warehouse.api.controller.IngredientController;
-import warehouse.api.dto.IngredientDTO;
-import warehouse.api.exception.ControllerAdviceExceptionHandling;
-import warehouse.api.exception.IngredientNotFoundException;
+import warehouse.api.service.IngredientDTOMapper;
+import warehouse.dto.IngredientDTO;
+import warehouse.exception.ControllerAdviceExceptionHandling;
+import warehouse.exception.IngredientNotFoundException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,19 +20,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import warehouse.api.service.DTOMapper;
 import warehouse.api.service.IngredientService;
 
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes ={IngredientController.class, ControllerAdviceExceptionHandling.class})
@@ -41,33 +40,33 @@ public class IngredientControllerMockMvcIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     @MockBean
     private IngredientService ingredientService;
     @MockBean
-    private DTOMapper dtoMapper;
+    private IngredientDTOMapper ingredientDtoMapper;
 
     private IngredientDTO ingredient;
+    private IngredientDTO ingredientNew;
     private final String getIngredientListPath = "/ingredients";
     private final String getIngredientByIdPath = "/ingredient/{id}";
 
     @BeforeAll
     void init () {
-        this.ingredient = new IngredientDTO(20L,"Salami","jaa","italy",'d',
+        ingredient = new IngredientDTO(20L,"Salami","jaa","italy",'d',
                 350,1,100.0,4.0);
+        ingredientNew = new IngredientDTO(30L,"Brot","noname","spain",'b',
+                200,1,100.0,1.0);
     }
 
     @Test
     void testMockMvcCreation(){
-       assertNotNull(mockMvc);
+        Assertions.assertNotNull(mockMvc);
     }
     @Test
     public void getIngredients_ShouldReturnIngredientList() throws Exception {
-        IngredientDTO ingredient1 = new IngredientDTO(30L,"Brot","noname","spain",'b',
-                200,1,100.0,1.0);
-        when(ingredientService.getIngredients()).thenReturn(List.of(this.ingredient,ingredient1));
+        when(ingredientService.getIngredients()).thenReturn(List.of(ingredient, ingredientNew));
 
-        this.mockMvc.perform(get(this.getIngredientListPath).contentType("application/json"))
+        mockMvc.perform(get(getIngredientListPath).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(2)))
                 .andExpect(jsonPath("$[0].id").value("20"))
@@ -95,16 +94,16 @@ public class IngredientControllerMockMvcIntegrationTest {
     public void getIngredients_ShouldReturnEmptyList() throws Exception {
         List<IngredientDTO> emptyList = new LinkedList<>();
         when(ingredientService.getIngredients()).thenReturn(emptyList);
-        this.mockMvc.perform(get(this.getIngredientListPath).contentType("application/json"))
+
+        mockMvc.perform(get(getIngredientListPath).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(0)));
     }
     @Test
     public void getIngredientsWithNotNeededParameterInput_ShouldReturnIngredientList()throws Exception{
-        IngredientDTO ingredient1 = new IngredientDTO(30L,"Brot","noname","spain",'b',200,1,100.0,1.0);
-        when(ingredientService.getIngredients()).thenReturn(List.of(this.ingredient,ingredient1));
+        when(ingredientService.getIngredients()).thenReturn(List.of(ingredient, ingredientNew));
 
-        this.mockMvc.perform(get(this.getIngredientListPath,"hi").contentType("application/json"))
+        mockMvc.perform(get(getIngredientListPath,"hi").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", Matchers.is(2)))
                 .andExpect(jsonPath("$[0].id").value("20"))
@@ -130,9 +129,9 @@ public class IngredientControllerMockMvcIntegrationTest {
     }
     @Test
     public void getIngredientByID_ShouldGetIngredientById() throws Exception {
-        when(ingredientService.getIngredient(20L)).thenReturn(this.ingredient);
+        when(ingredientService.getIngredient(20L)).thenReturn(ingredient);
 
-        this.mockMvc.perform(get(this.getIngredientByIdPath,20L).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getIngredientByIdPath,20L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("20"))
                 .andExpect(jsonPath("$.name").value("Salami"))
@@ -143,21 +142,20 @@ public class IngredientControllerMockMvcIntegrationTest {
                 .andExpect(jsonPath("$.amount").value("1"))
                 .andExpect(jsonPath("$.weight").value("100.0"))
                 .andExpect(jsonPath("$.price").value("4.0"));
-     }
+    }
     @Test
     public void getIngredientByID_ShouldGetIngredientNotFoundResponse() throws Exception {
-        when(ingredientService.getIngredient(20L)).thenThrow(
-                new IngredientNotFoundException("Ingredient with id :20 not found in Database"));
+        when(ingredientService.getIngredient(20L)).thenThrow(new IngredientNotFoundException(20L));
 
-        this.mockMvc.perform(get(this.getIngredientByIdPath,20L).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getIngredientByIdPath,20L).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
     @Test
     public void getIngredientByID_ShouldGetBadRequestResponse() throws Exception {
         when(ingredientService.getIngredient(20L)).thenThrow(
-                new IngredientNotFoundException("Ingredient with id :20 not found in Database"));
+                new IngredientNotFoundException(20L));
 
-        this.mockMvc.perform(get(this.getIngredientByIdPath,"extraInputVariable").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(getIngredientByIdPath,"extraInputVariable").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 }

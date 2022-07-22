@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import warehouse.api.dto.PizzaDTO;
-import warehouse.api.exception.PizzaNotFoundException;
+import warehouse.dto.PizzaDTO;
+import warehouse.exception.PizzaNotFoundException;
 import warehouse.api.service.PizzaService;
 
 
@@ -20,7 +20,6 @@ public class PizzaController {
 
     @Autowired
     private PizzaService pizzaService;
-
 
     @GetMapping(path = "/pizzas", produces = "application/json")
     public ResponseEntity<List<PizzaDTO>> getPizzas() {

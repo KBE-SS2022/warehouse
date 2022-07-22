@@ -1,11 +1,11 @@
 package warehouse.api.service;
 
-import warehouse.api.dto.IngredientDTO;
+import warehouse.dto.IngredientDTO;
 import warehouse.api.entity.Ingredient;
 import warehouse.api.repository.IngredientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import warehouse.api.exception.IngredientNotFoundException;
+import warehouse.exception.IngredientNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class IngredientService {
 
     @Autowired
-    private DTOMapper dtoMapper;
+    private IngredientDTOMapper dtoMapper;
     @Autowired
     private IngredientRepository ingredientRepository;
 
@@ -28,7 +28,7 @@ public class IngredientService {
 
     public IngredientDTO getIngredient(Long id) {
         Ingredient ingredient = ingredientRepository.findById(id).orElseThrow(()->
-                new IngredientNotFoundException("Ingredient with id: " + id + " not found in Database"));
+                new IngredientNotFoundException(id));
         return dtoMapper.toIngredientDTO(ingredient);
     }
 }
